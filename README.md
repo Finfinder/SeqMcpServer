@@ -322,6 +322,34 @@ SeqMcpServer/
 
 ---
 
+## Testing
+
+The project includes unit tests and integration tests.
+
+### Unit tests
+
+```bash
+dotnet test SeqMcpServer.Tests.Unit
+```
+
+No external dependencies required — runs entirely in-process with mocked HTTP handlers.
+
+### Integration tests
+
+```bash
+dotnet test SeqMcpServer.Tests.Integration
+```
+
+Requires **Docker** — [Testcontainers](https://dotnet.testcontainers.org/) automatically starts a `datalust/seq:latest` container, seeds test data, runs all tests, and cleans up.
+
+### All tests
+
+```bash
+dotnet test
+```
+
+---
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.

@@ -13,6 +13,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="SeqMcpServer.Tests.Unit" />
+    <InternalsVisibleTo Include="SeqMcpServer.Tests.Integration" />
+  </ItemGroup>
+
+  <!-- Exclude nested test projects from compilation -->
+  <ItemGroup>
+    <Compile Remove="SeqMcpServer.Tests.Unit\**" />
+    <Compile Remove="SeqMcpServer.Tests.Integration\**" />
+    <EmbeddedResource Remove="SeqMcpServer.Tests.Unit\**" />
+    <EmbeddedResource Remove="SeqMcpServer.Tests.Integration\**" />
+    <None Remove="SeqMcpServer.Tests.Unit\**" />
+    <None Remove="SeqMcpServer.Tests.Integration\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.9" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
