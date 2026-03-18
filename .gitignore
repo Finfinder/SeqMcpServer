@@ -1,0 +1,33 @@
+# Workspace file
+SeqMcpServer.code-workspace
+
+# VS Code artifacts
+.vscode/
+.history/
+
+# GitHub Copilot local artifacts
+.copilot/
+.copilot-chat/
+
+# .NET build and publish artifacts
+bin/
+obj/
+out/
+publish/
+
+# Visual Studio artifacts
+.vs/
+*.user
+*.suo
+*.userosscache
+*.rsuser
+*.sln.docstates
+
+# Test and log artifacts
+TestResults/
+*.trx
+*.log
+
+# NuGet package artifacts
+*.nupkg
+*.snupkg
