@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Seq.Api;
+using SeqMcpServer;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -19,8 +20,8 @@ if (!Uri.TryCreate(seqUrl, UriKind.Absolute, out _))
     throw new InvalidOperationException($"Invalid SEQ_URL: '{seqUrl}'");
 
 Console.Error.WriteLine(string.IsNullOrEmpty(seqApiKey)
-    ? "WARNING: No SEQ_API_KEY configured \u2014 connecting without authentication"
-    : "Seq MCP server starting with API key authentication");
+    ? $"WARNING: Seq MCP server v{VersionInfo.Current} \u2014 no SEQ_API_KEY configured, connecting without authentication"
+    : $"Seq MCP server v{VersionInfo.Current} starting with API key authentication");
 
 builder.Services.AddHttpClient("Seq", client =>
 {
@@ -35,7 +36,7 @@ builder.Services
         options.ServerInfo = new()
         {
             Name = "seq-mcp-server",
-            Version = "1.0.0"
+            Version = VersionInfo.Current
         };
     })
     .WithStdioServerTransport()
