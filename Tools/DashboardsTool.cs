@@ -20,7 +20,7 @@ public static class DashboardsTool
             var dashboards = await connection.Dashboards.ListAsync(shared: true);
 
             // DashboardEntity has: Id, Title, OwnerId, IsProtected, SignalExpression, Charts
-            // ChartPart has: Id, Title, Description, Queries (List<ChartQueryPart>), SignalExpression
+            // ChartPart has: Id, Title, Queries (List<ChartQueryPart>), SignalExpression
             // ChartQueryPart has: Where, Measurements, GroupBy, Having, OrderBy, Limit
             var result = dashboards.Select(d => new
             {
@@ -30,7 +30,6 @@ public static class DashboardsTool
                 {
                     c.Id,
                     c.Title,
-                    c.Description,
                     Queries = c.Queries?.Select(q => new
                     {
                         q.Where,

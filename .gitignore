@@ -8,6 +8,7 @@ SeqMcpServer.code-workspace
 # GitHub Copilot local artifacts
 .copilot/
 .copilot-chat/
+.github/
 
 # .NET build and publish artifacts
 bin/
