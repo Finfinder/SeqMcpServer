@@ -22,3 +22,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `VersionInfo` helper for assembly-based version resolution
 - Startup diagnostics with server version on stderr
 - Version defined as Single Source of Truth in `.csproj`
+- MIT License
