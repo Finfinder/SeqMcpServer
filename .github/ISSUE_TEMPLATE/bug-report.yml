@@ -1,0 +1,139 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Seq MCP Server
+title: "[Bug]: "
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below to help us investigate the issue.
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: input
+    id: server-version
+    attributes:
+      label: Server version
+      description: Use the `seq_get_version` MCP tool or check `VersionInfo.Current`.
+      placeholder: "e.g. 1.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating system
+      options:
+        - Windows 11
+        - macOS 14+
+        - Ubuntu 22.04
+        - Debian
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: os-other
+    attributes:
+      label: Other OS
+      description: Fill only if you selected 'Other' above.
+      placeholder: "e.g. Fedora 40, Alpine 3.19"
+    validations:
+      required: false
+
+  - type: input
+    id: dotnet-sdk-version
+    attributes:
+      label: .NET SDK version
+      placeholder: "e.g. 9.0.100"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mcp-client
+    attributes:
+      label: MCP client
+      options:
+        - VS Code
+        - Claude Desktop
+        - Cursor
+        - Windsurf
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: seq-version
+    attributes:
+      label: Seq version
+      placeholder: "e.g. 2024.3"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment-type
+    attributes:
+      label: Deployment type
+      options:
+        - Docker
+        - Local
+        - Cloud
+        - Hosted
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: A clear and concise description of what actually happened.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        > ⚠️ Do **NOT** paste sensitive data such as API keys, passwords, or tokens.
+
+  - type: textarea
+    id: log-output
+    attributes:
+      label: Relevant log output
+      description: Paste any relevant log output or stderr messages here.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the problem here.
+    validations:
+      required: false

@@ -300,7 +300,7 @@ This project uses **version branches** (e.g., `1.0.0`, `1.0.1`, `1.1.0`). Before
 
 ## Reporting Issues
 
-Use [GitHub Issues](../../issues) to report bugs or suggest features. The repository provides **Issue templates** — please use [Bug Report](../../issues/new?template=bug-report.md) for bugs and [Feature Request](../../issues/new?template=feature-request.md) for new ideas. When filing a bug report, please include:
+Use [GitHub Issues](../../issues) to report bugs or suggest features. The repository provides **Issue forms** — please use [Bug Report](../../issues/new?template=bug-report.yml) for bugs and [Feature Request](../../issues/new?template=feature-request.yml) for new ideas. When filing a bug report, please include:
 
 - Server version (`seq_get_version` tool output or `VersionInfo.Current`)
 - Steps to reproduce

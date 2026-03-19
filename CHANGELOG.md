@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `InternalsVisibleTo` for test projects to access internal helpers
 - Contributor Covenant Code of Conduct (`CODE_OF_CONDUCT.md`)
 
+### Changed
+
+- Migrated Issue templates from Markdown to YAML Issue Forms with required field validation, dropdowns (OS, MCP client, deployment type, feature category), and code-rendered log output
+
 ## [1.0.0] - 2026-03-18
 
 ### Added
