@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `.editorconfig` with formatting and .NET code style rules (Allman braces, 4-space indent, file-scoped namespaces, `var` preference, explicit access modifiers) — enforced at editor level as suggestions
 - GitHub Issue templates (Bug Report, Feature Request) with template chooser configuration
 - Pull Request template with contribution checklist
 - GitHub Discussions enabled for community Q&A

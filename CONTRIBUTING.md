@@ -85,6 +85,8 @@ SeqMcpServer/
 
 ### Style
 
+Formatting and code style conventions are enforced automatically by the [`.editorconfig`](.editorconfig) file at the repository root. Your editor will apply these settings when you open the project — no manual configuration needed.
+
 - **Allman style braces** (opening brace on its own line)
 - **4 spaces** indentation (no tabs)
 - `nullable enable` — respect nullable reference types
