@@ -350,6 +350,12 @@ dotnet test
 
 ---
 
+## Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get started.
+
+---
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.
