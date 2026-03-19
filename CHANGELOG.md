@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Unit test project (`SeqMcpServer.Tests.Unit`) with xUnit and NSubstitute — 15 tests covering VersionTool, AlertsTool, DiagnosticsTool, JsonDefaults, and VersionInfo
 - Integration test project (`SeqMcpServer.Tests.Integration`) with xUnit and Testcontainers — 19 tests running all 8 MCP tools against a real Seq instance in Docker
 - `InternalsVisibleTo` for test projects to access internal helpers
+- Contributor Covenant Code of Conduct (`CODE_OF_CONDUCT.md`)
 
 ## [1.0.0] - 2026-03-18
 
