@@ -8,7 +8,11 @@ SeqMcpServer.code-workspace
 # GitHub Copilot local artifacts
 .copilot/
 .copilot-chat/
-.github/
+.github/*
+
+# Allow GitHub Issue/PR templates to be committed
+!.github/ISSUE_TEMPLATE/
+!.github/PULL_REQUEST_TEMPLATE.md
 
 # .NET build and publish artifacts
 bin/

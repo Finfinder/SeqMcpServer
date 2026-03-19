@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- GitHub Issue templates (Bug Report, Feature Request) with template chooser configuration
+- Pull Request template with contribution checklist
+- GitHub Discussions enabled for community Q&A
 - Contributing guide (`CONTRIBUTING.md`) with development setup, coding conventions, MCP tool patterns, testing guidelines, and PR process
 - Unit test project (`SeqMcpServer.Tests.Unit`) with xUnit and NSubstitute — 15 tests covering VersionTool, AlertsTool, DiagnosticsTool, JsonDefaults, and VersionInfo
 - Integration test project (`SeqMcpServer.Tests.Integration`) with xUnit and Testcontainers — 19 tests running all 8 MCP tools against a real Seq instance in Docker
