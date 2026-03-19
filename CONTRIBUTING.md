@@ -268,8 +268,8 @@ dotnet test
 This project uses **version branches** (e.g., `1.0.0`, `1.0.1`, `1.1.0`). Before starting work:
 
 1. **Open an issue** or comment on an existing one to discuss the change
-2. **Agree on the target branch** with the maintainer in the issue
-3. Create your feature branch from the agreed target branch
+2. **Target the highest version branch** (e.g., `1.1.0`) — this is the default for all contributions. If your change specifically targets an earlier version, discuss with the repository owner in the issue first.
+3. Create your feature branch from the target version branch
 
 ### Before committing
 
@@ -280,7 +280,7 @@ This project uses **version branches** (e.g., `1.0.0`, `1.0.1`, `1.1.0`). Before
 
 ## Submitting a Pull Request
 
-1. Fork the repository and create your branch from the agreed target branch
+1. Fork the repository and create your branch from the target version branch
 2. Implement your changes following the coding conventions above
 3. Run unit tests locally and ensure they pass
 4. Commit with a clear, imperative message
