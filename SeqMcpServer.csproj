@@ -12,7 +12,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>seq-mcp-server</ToolCommandName>
-    <PackageId>SeqMcpServer</PackageId>
+    <PackageId>Finfinder.SeqMcpServer</PackageId>
     <Description>MCP (Model Context Protocol) server for Seq centralized logging platform. Provides AI assistants with tools to query logs, run SQL, list signals, dashboards, alerts, and more.</Description>
     <PackageProjectUrl>https://github.com/Finfinder/SeqMcpServer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Finfinder/SeqMcpServer</RepositoryUrl>
