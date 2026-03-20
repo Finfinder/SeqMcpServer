@@ -11,6 +11,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -50,6 +51,7 @@ jobs:
       - name: Publish self-contained single-file
         run: >
           dotnet publish -c Release
+          --no-restore
           -r ${{ matrix.rid }}
           --self-contained true
           -p:PublishSingleFile=true
@@ -93,7 +95,7 @@ jobs:
         run: dotnet restore
 
       - name: Publish framework-dependent
-        run: dotnet publish -c Release --self-contained false -o ./publish
+        run: dotnet publish -c Release --no-restore --self-contained false -o ./publish
 
       - name: Archive as zip
         run: |
@@ -123,7 +125,7 @@ jobs:
         run: dotnet restore
 
       - name: Pack as dotnet tool
-        run: dotnet pack -c Release -o ./nupkg
+        run: dotnet pack -c Release --no-restore -o ./nupkg
 
       - name: Upload NuGet package
         uses: actions/upload-artifact@v4
@@ -173,7 +175,7 @@ jobs:
           cat release_notes.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@c95fe3489396fe8a9eb87422571f2b9acd195430 # v2.2.1
         with:
           files: |
             release/*.zip
