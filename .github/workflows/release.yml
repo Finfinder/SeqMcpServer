@@ -175,7 +175,7 @@ jobs:
           cat release_notes.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@c95fe3489396fe8a9eb87422571f2b9acd195430 # v2.2.1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             release/*.zip
