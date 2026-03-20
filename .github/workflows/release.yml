@@ -155,7 +155,7 @@ jobs:
       - name: Generate SHA256 checksums
         run: |
           cd release
-          sha256sum SeqMcpServer-*.zip SeqMcpServer-*.tar.gz SeqMcpServer.*.nupkg > checksums.sha256
+          sha256sum *.zip *.tar.gz *.nupkg > checksums.sha256
           cat checksums.sha256
 
       - name: Extract release notes from CHANGELOG
