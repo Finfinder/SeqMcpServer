@@ -1,0 +1,193 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run unit tests
+        run: dotnet test SeqMcpServer.Tests.Unit --no-restore -c Release
+
+      - name: Run integration tests
+        run: dotnet test SeqMcpServer.Tests.Integration --no-restore -c Release
+
+  build-self-contained:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rid: [win-x64, linux-x64, osx-x64, osx-arm64]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Publish self-contained single-file
+        run: >
+          dotnet publish -c Release
+          -r ${{ matrix.rid }}
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -o ./publish
+
+      - name: Archive (zip) for Windows
+        if: matrix.rid == 'win-x64'
+        run: |
+          cd publish
+          zip -r ../SeqMcpServer-${{ matrix.rid }}.zip .
+
+      - name: Archive (tar.gz) for Linux/macOS
+        if: matrix.rid != 'win-x64'
+        run: |
+          cd publish
+          tar -czf ../SeqMcpServer-${{ matrix.rid }}.tar.gz .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SeqMcpServer-${{ matrix.rid }}
+          path: |
+            SeqMcpServer-*.zip
+            SeqMcpServer-*.tar.gz
+          if-no-files-found: error
+
+  build-framework-dependent:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Publish framework-dependent
+        run: dotnet publish -c Release --self-contained false -o ./publish
+
+      - name: Archive as zip
+        run: |
+          cd publish
+          zip -r ../SeqMcpServer-portable.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SeqMcpServer-portable
+          path: SeqMcpServer-portable.zip
+          if-no-files-found: error
+
+  pack-nuget:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Pack as dotnet tool
+        run: dotnet pack -c Release -o ./nupkg
+
+      - name: Upload NuGet package
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ./nupkg/*.nupkg
+          if-no-files-found: error
+
+  release:
+    needs: [build-self-contained, build-framework-dependent, pack-nuget]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Prepare release files
+        run: |
+          mkdir -p release
+          find ./artifacts -type f \( -name '*.zip' -o -name '*.tar.gz' -o -name '*.nupkg' \) -exec cp {} release/ \;
+          ls -la release/
+
+      - name: Generate SHA256 checksums
+        run: |
+          cd release
+          sha256sum SeqMcpServer-*.zip SeqMcpServer-*.tar.gz SeqMcpServer.*.nupkg > checksums.sha256
+          cat checksums.sha256
+
+      - name: Extract release notes from CHANGELOG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v ver="$VERSION" '
+            /^## \[/ { if (found) exit; if (index($0, "[" ver "]")) found=1; next }
+            found { print }
+          ' CHANGELOG.md > release_notes.md
+
+          if [ ! -s release_notes.md ]; then
+            echo "No changelog entry found for version $VERSION" >&2
+            echo "Release $VERSION" > release_notes.md
+          fi
+
+          echo "--- Release notes ---"
+          cat release_notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.zip
+            release/*.tar.gz
+            release/checksums.sha256
+            release/*.nupkg
+          body_path: release_notes.md
+          generate_release_notes: false
+          draft: false
+          prerelease: false
+
+      - name: Push to NuGet.org
+        run: >
+          dotnet nuget push release/*.nupkg
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate

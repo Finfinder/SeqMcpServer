@@ -10,6 +10,14 @@
     <Authors>Rafał Trzepocki</Authors>
     <Copyright>Copyright (c) 2026 Rafał Trzepocki</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>seq-mcp-server</ToolCommandName>
+    <PackageId>SeqMcpServer</PackageId>
+    <Description>MCP (Model Context Protocol) server for Seq centralized logging platform. Provides AI assistants with tools to query logs, run SQL, list signals, dashboards, alerts, and more.</Description>
+    <PackageProjectUrl>https://github.com/Finfinder/SeqMcpServer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Finfinder/SeqMcpServer</RepositoryUrl>
+    <PackageTags>seq;mcp;logging;dotnet-tool;model-context-protocol</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +44,7 @@
 
   <ItemGroup>
     <None Include="LICENSE" Pack="true" PackagePath="" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
