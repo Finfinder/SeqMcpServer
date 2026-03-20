@@ -309,6 +309,8 @@ Use [GitHub Issues](../../issues) to report bugs or suggest features. The reposi
 - Expected vs. actual behavior
 - Relevant log output (if any)
 
+> **Automated validation**: A GitHub Actions workflow automatically checks whether issues are created from the provided templates and contain all required sections. Issues that don’t match a template or have missing sections will be labeled `invalid-template` and receive a comment with guidance. You can edit the issue to fix it — the validation runs again automatically.
+
 ---
 
 ## License

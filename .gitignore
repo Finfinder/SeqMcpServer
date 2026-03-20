@@ -13,6 +13,7 @@ SeqMcpServer.code-workspace
 # Allow GitHub Issue/PR templates to be committed
 !.github/ISSUE_TEMPLATE/
 !.github/PULL_REQUEST_TEMPLATE.md
+!.github/workflows/
 
 # .NET build and publish artifacts
 bin/

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- GitHub Actions workflow (`validate-issue.yml`) for automatic issue template validation — labels and comments on issues not matching Bug Report or Feature Request templates
+- `blank_issues_enabled: false` in template chooser configuration — blocks free-form issues in the GitHub UI
 - `.editorconfig` with formatting and .NET code style rules (Allman braces, 4-space indent, file-scoped namespaces, `var` preference, explicit access modifiers) — enforced at editor level as suggestions
 - GitHub Issue templates (Bug Report, Feature Request) with template chooser configuration
 - Pull Request template with contribution checklist

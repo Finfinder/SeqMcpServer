@@ -1,0 +1,198 @@
+name: Validate Issue Template
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    if: >-
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'renovate[bot]' &&
+      github.actor != 'github-actions[bot]'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Parse as Bug Report
+        id: bug-parser
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/bug-report.yml
+
+      - name: Parse as Feature Request
+        id: feature-parser
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/feature-request.yml
+
+      - name: Validate template
+        uses: actions/github-script@v7
+        env:
+          BUG_REPORT_JSON: ${{ steps.bug-parser.outputs.jsonString }}
+          FEATURE_REQUEST_JSON: ${{ steps.feature-parser.outputs.jsonString }}
+        with:
+          script: |
+            const bugReport = JSON.parse(process.env.BUG_REPORT_JSON || '{}');
+            const featureRequest = JSON.parse(process.env.FEATURE_REQUEST_JSON || '{}');
+
+            const LABEL = 'invalid-template';
+            const COMMENT_MARKER = '<!-- validate-issue -->';
+            const REPO_URL = `https://github.com/${context.repo.owner}/${context.repo.repo}`;
+
+            const bugRequiredFields = {
+              'bug_description': 'Bug description',
+              'server_version': 'Server version',
+              'operating_system': 'Operating system',
+              'dotnet_sdk_version': '.NET SDK version',
+              'mcp_client': 'MCP client',
+              'seq_version': 'Seq version',
+              'deployment_type': 'Deployment type',
+              'steps_to_reproduce': 'Steps to reproduce',
+              'expected_behavior': 'Expected behavior',
+              'actual_behavior': 'Actual behavior'
+            };
+
+            const featureRequiredFields = {
+              'feature_category': 'Feature category',
+              'problem_or_use_case': 'Problem or use case',
+              'proposed_solution': 'Proposed solution'
+            };
+
+            function findMissingFields(parsed, requiredFields) {
+              const missing = [];
+              for (const [key, label] of Object.entries(requiredFields)) {
+                const value = parsed[key];
+                if (!value || (typeof value === 'string' && value.trim() === '')) {
+                  missing.push(label);
+                }
+              }
+              return missing;
+            }
+
+            // Detect template type by checking key fields
+            const isBugReport = bugReport.bug_description && String(bugReport.bug_description).trim() !== '';
+            const isFeatureRequest = featureRequest.feature_category && String(featureRequest.feature_category).trim() !== '';
+
+            let missingFields = [];
+            let templateDetected = false;
+
+            if (isBugReport) {
+              templateDetected = true;
+              missingFields = findMissingFields(bugReport, bugRequiredFields);
+            } else if (isFeatureRequest) {
+              templateDetected = true;
+              missingFields = findMissingFields(featureRequest, featureRequiredFields);
+            }
+
+            const issueNumber = context.issue.number;
+            const validationPassed = templateDetected && missingFields.length === 0;
+
+            if (validationPassed) {
+              // Remove label if present (issue was fixed after edit)
+              try {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  name: LABEL
+                });
+                core.info(`Removed '${LABEL}' label from issue #${issueNumber}`);
+              } catch (e) {
+                // Label not present — ignore 404
+                if (e.status !== 404) throw e;
+              }
+
+              // Remove previous validation comment if present
+              const allComments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber
+              });
+              const oldComment = allComments.data.find(c =>
+                c.user.login === 'github-actions[bot]' && c.body.includes(COMMENT_MARKER)
+              );
+              if (oldComment) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: oldComment.id
+                });
+                core.info(`Deleted validation comment from issue #${issueNumber}`);
+              }
+
+              core.info(`Issue #${issueNumber} passed template validation.`);
+              return;
+            }
+
+            // Build comment body
+            let commentBody = '';
+            if (!templateDetected) {
+              commentBody = [
+                `👋 Thanks for opening this issue!`,
+                ``,
+                `It looks like this issue wasn't created using one of our issue templates.`,
+                ``,
+                `Please use one of the following templates to ensure we have all the information needed:`,
+                `- [Bug Report](${REPO_URL}/issues/new?template=bug-report.yml)`,
+                `- [Feature Request](${REPO_URL}/issues/new?template=feature-request.yml)`,
+                ``,
+                `You can also edit this issue to add the missing information, and the validation will run again automatically.`
+              ].join('\n');
+            } else {
+              const missingList = missingFields.map(f => `- ${f}`).join('\n');
+              commentBody = [
+                `👋 Thanks for opening this issue!`,
+                ``,
+                `Some required sections are missing or empty:`,
+                ``,
+                missingList,
+                ``,
+                `Please edit this issue to fill in the missing sections. The validation will run again automatically.`,
+                ``,
+                `If you'd prefer, you can also create a new issue using the appropriate template:`,
+                `- [Bug Report](${REPO_URL}/issues/new?template=bug-report.yml)`,
+                `- [Feature Request](${REPO_URL}/issues/new?template=feature-request.yml)`
+              ].join('\n');
+            }
+
+            // Add label
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              labels: [LABEL]
+            });
+
+            // Upsert validation comment (update existing or create new)
+            const fullBody = COMMENT_MARKER + '\n' + commentBody;
+            const allComments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
+            });
+            const existingComment = allComments.data.find(c =>
+              c.user.login === 'github-actions[bot]' && c.body.includes(COMMENT_MARKER)
+            );
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: fullBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: fullBody
+              });
+            }
+
+            core.warning(`Issue #${issueNumber} failed template validation.`);
