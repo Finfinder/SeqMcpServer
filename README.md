@@ -3,7 +3,7 @@
 [![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-blue)](https://modelcontextprotocol.io/)
 [![Seq](https://img.shields.io/badge/Seq-Centralized%20Logging-0A0A0A)](https://datalust.co/seq)
-[![Version](https://img.shields.io/badge/version-1.0.0-green)]()
+[![Version](https://img.shields.io/badge/version-1.1.0-green)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that connects AI agents to [Seq](https://datalust.co/seq) — a centralized structured logging platform. This server enables LLMs to search log events, execute SQL queries, inspect dashboards, alerts, signals, and more through natural language interactions.
