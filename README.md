@@ -356,6 +356,12 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gu
 
 ---
 
+## Security
+
+To report a security vulnerability, please see [SECURITY.md](SECURITY.md) for instructions.
+
+---
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.

@@ -6,3 +6,6 @@ contact_links:
   - name: Ask a Question
     url: https://github.com/Finfinder/SeqMcpServer/discussions
     about: Ask questions, share ideas, or start a discussion with the community
+  - name: Report a Security Vulnerability
+    url: https://github.com/Finfinder/SeqMcpServer/security/advisories/new
+    about: Report a security vulnerability privately through GitHub Security Advisories

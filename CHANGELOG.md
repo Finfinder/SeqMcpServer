@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Security policy (`SECURITY.md`) with responsible disclosure process, response timeline, scope definition, and Safe Harbor clause via GitHub Security Advisories
+- Security vulnerability reporting link in issue template chooser (`config.yml`)
+
 ## [1.0.0] - 2026-03-20
 
 ### Added
