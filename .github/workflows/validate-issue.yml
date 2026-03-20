@@ -41,7 +41,8 @@ jobs:
             const bugReport = JSON.parse(process.env.BUG_REPORT_JSON || '{}');
             const featureRequest = JSON.parse(process.env.FEATURE_REQUEST_JSON || '{}');
 
-            const LABEL = 'invalid-template';
+            const LABEL_INVALID = 'invalid-template';
+            const LABEL_NEEDS_INFO = 'needs-info';
             const COMMENT_MARKER = '<!-- validate-issue -->';
             const REPO_URL = `https://github.com/${context.repo.owner}/${context.repo.repo}`;
 
@@ -94,18 +95,20 @@ jobs:
             const validationPassed = templateDetected && missingFields.length === 0;
 
             if (validationPassed) {
-              // Remove label if present (issue was fixed after edit)
-              try {
-                await github.rest.issues.removeLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issueNumber,
-                  name: LABEL
-                });
-                core.info(`Removed '${LABEL}' label from issue #${issueNumber}`);
-              } catch (e) {
-                // Label not present — ignore 404
-                if (e.status !== 404) throw e;
+              // Remove both validation labels if present (issue was fixed after edit)
+              for (const label of [LABEL_INVALID, LABEL_NEEDS_INFO]) {
+                try {
+                  await github.rest.issues.removeLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issueNumber,
+                    name: label
+                  });
+                  core.info(`Removed '${label}' label from issue #${issueNumber}`);
+                } catch (e) {
+                  // Label not present — ignore 404
+                  if (e.status !== 404) throw e;
+                }
               }
 
               // Remove previous validation comment if present
@@ -161,12 +164,27 @@ jobs:
               ].join('\n');
             }
 
-            // Add label
+            // Add contextual label and remove the opposite one (mutual exclusivity)
+            const labelToAdd = templateDetected ? LABEL_NEEDS_INFO : LABEL_INVALID;
+            const labelToRemove = templateDetected ? LABEL_INVALID : LABEL_NEEDS_INFO;
+
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                name: labelToRemove
+              });
+            } catch (e) {
+              // Label not present — ignore 404
+              if (e.status !== 404) throw e;
+            }
+
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              labels: [LABEL]
+              labels: [labelToAdd]
             });
 
             // Upsert validation comment (update existing or create new)
@@ -195,4 +213,4 @@ jobs:
               });
             }
 
-            core.warning(`Issue #${issueNumber} failed template validation.`);
+            core.warning(`Issue #${issueNumber} failed template validation (${labelToAdd}).`);

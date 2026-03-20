@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Split `invalid-template` label into two: `invalid-template` (issue not using any template) and `needs-info` (template used but required sections missing) — enables finer-grained issue triage
 - Migrated Issue templates from Markdown to YAML Issue Forms with required field validation, dropdowns (OS, MCP client, deployment type, feature category), and code-rendered log output
 
 ## [1.0.0] - 2026-03-18
