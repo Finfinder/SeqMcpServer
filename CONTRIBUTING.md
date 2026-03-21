@@ -10,6 +10,19 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 
 ---
 
+## Security
+
+Please review the [Security Policy](SECURITY.md) for the full details on how we handle security in this project.
+
+When contributing, keep the following security guidelines in mind:
+
+- **Never commit credentials, API keys, or secrets** to the repository — use environment variables exclusively
+- **Report vulnerabilities privately** through [GitHub Security Advisories](https://github.com/Finfinder/SeqMcpServer/security/advisories/new) — never through public issues or pull requests
+- **Do not introduce dependencies with known vulnerabilities** — vet any new packages before adding them
+- **Validate all user inputs** (MCP tool parameters) — use input clamping (`Math.Clamp`) and enforce query limits (e.g., automatic `LIMIT` for SQL) to protect against injection and excessive load on Seq
+
+---
+
 ## Getting Started
 
 ### Prerequisites
