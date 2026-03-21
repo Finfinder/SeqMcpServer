@@ -5,6 +5,7 @@
 [![Seq](https://img.shields.io/badge/Seq-Centralized%20Logging-0A0A0A)](https://datalust.co/seq)
 [![Version](https://img.shields.io/badge/version-1.1.0-green)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Finfinder_SeqMcpServer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Finfinder_SeqMcpServer)
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that connects AI agents to [Seq](https://datalust.co/seq) — a centralized structured logging platform. This server enables LLMs to search log events, execute SQL queries, inspect dashboards, alerts, signals, and more through natural language interactions.
 
@@ -347,6 +348,45 @@ Requires **Docker** — [Testcontainers](https://dotnet.testcontainers.org/) aut
 ```bash
 dotnet test
 ```
+
+---
+
+## Code Quality
+
+This project is continuously analyzed by [SonarCloud](https://sonarcloud.io/summary/new_code?id=Finfinder_SeqMcpServer) for code quality and security.
+
+- **CI-based analysis**: The [`sonar.yml`](.github/workflows/sonar.yml) workflow runs SonarScanner for .NET on every push to `main`, version branches, and pull requests.
+- **PR decoration**: SonarCloud automatically posts analysis results as comments on pull requests, including new issues, quality gate status, and coverage changes.
+- **Quality Gate**: The project uses the "Sonar way" quality gate — new code must pass all conditions before merging.
+
+### SonarQube MCP Server (Optional)
+
+The [SonarQube MCP Server](https://github.com/SonarSource/sonarqube-mcp-server) enables AI agents (GitHub Copilot) to query SonarCloud analysis results directly from VS Code. This integration is used by the `code-reviewer` and `software-engineer` agents.
+
+**Requirements:** Docker
+
+Add the following to your `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "sonarqube": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm",
+        "-e", "SONAR_TOKEN",
+        "-e", "SONAR_HOST_URL=https://sonarcloud.io",
+        "-e", "SONAR_ORGANIZATION=finfinder",
+        "mcp/sonarqube"
+      ],
+      "env": {
+        "SONAR_TOKEN": "${input:sonarToken}"
+      }
+    }
+  }
+}
+```
+
+To generate a `SONAR_TOKEN`, go to [SonarCloud Security](https://sonarcloud.io/account/security) and create a new token with **Execute Analysis** scope.
 
 ---
 

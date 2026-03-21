@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- GitHub Actions workflow (`sonar.yml`) for SonarCloud CI-based analysis with SonarScanner for .NET — triggers on push to main/version branches and pull requests
+- SonarCloud Quality Gate badge in README
+- SonarQube MCP Server configuration documentation in README for local developer setup with AI agents
+- SonarCloud integration in code-reviewing and codebase-analysing skills for querying analysis results via SonarQube MCP tools
 - Security policy (`SECURITY.md`) with responsible disclosure process, response timeline, scope definition, and Safe Harbor clause via GitHub Security Advisories
 - Security vulnerability reporting link in issue template chooser (`config.yml`)
 
