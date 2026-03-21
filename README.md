@@ -356,6 +356,7 @@ dotnet test
 This project is continuously analyzed by [SonarCloud](https://sonarcloud.io/summary/new_code?id=Finfinder_SeqMcpServer) for code quality and security.
 
 - **CI-based analysis**: The [`sonar.yml`](.github/workflows/sonar.yml) workflow runs SonarScanner for .NET on every push to `main`, version branches, and pull requests.
+- **Code coverage**: Unit and integration tests generate OpenCover coverage reports via [coverlet](https://github.com/coverlet-coverage/coverlet), which are uploaded to SonarCloud for coverage analysis and PR decoration.
 - **PR decoration**: SonarCloud automatically posts analysis results as comments on pull requests, including new issues, quality gate status, and coverage changes.
 - **Quality Gate**: The project uses the "Sonar way" quality gate — new code must pass all conditions before merging.
 

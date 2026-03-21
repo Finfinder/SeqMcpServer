@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Code coverage reporting (OpenCover via coverlet) in SonarCloud workflow — unit and integration tests
+- Integration tests execution in SonarCloud workflow (`sonar.yml`)
 - Dedicated Security section in `CONTRIBUTING.md` with contributor security guidelines and reference to `SECURITY.md`
 - GitHub Actions workflow (`sonar.yml`) for SonarCloud CI-based analysis with SonarScanner for .NET — triggers on push to main/version branches and pull requests
 - SonarCloud Quality Gate badge in README
