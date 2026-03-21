@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Unit tests for error paths (catch blocks) in SDK-based tools: DashboardsTool, QueryLogsTool, RetentionPoliciesTool, SignalsTool, SqlQueryTool
+- Unit tests for DateTime parameter validation in QueryLogsTool and SqlQueryTool
 - Code coverage reporting (OpenCover via coverlet) in SonarCloud workflow — unit and integration tests
 - Integration tests execution in SonarCloud workflow (`sonar.yml`)
 - Dedicated Security section in `CONTRIBUTING.md` with contributor security guidelines and reference to `SECURITY.md`
