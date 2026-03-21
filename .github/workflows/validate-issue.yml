@@ -21,13 +21,13 @@ jobs:
 
       - name: Parse as Bug Report
         id: bug-parser
-        uses: stefanbuck/github-issue-parser@v3
+        uses: stefanbuck/github-issue-parser@10dcc54158ba4c137713d9d69d70a2da63b6bda3 # v3.2.3
         with:
           template-path: .github/ISSUE_TEMPLATE/bug-report.yml
 
       - name: Parse as Feature Request
         id: feature-parser
-        uses: stefanbuck/github-issue-parser@v3
+        uses: stefanbuck/github-issue-parser@10dcc54158ba4c137713d9d69d70a2da63b6bda3 # v3.2.3
         with:
           template-path: .github/ISSUE_TEMPLATE/feature-request.yml
 

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Security
+
+- Pin third-party GitHub Actions to full commit SHA: `softprops/action-gh-release` v2.6.1 in `release.yml`, `stefanbuck/github-issue-parser` v3.2.3 in `validate-issue.yml` (SonarCloud S7637)
+- Move secrets (`NUGET_API_KEY`, `SONAR_TOKEN`) from inline `${{ secrets.* }}` expansion in `run` blocks to `env:` blocks in `release.yml` and `sonar.yml` (SonarCloud S7636)
+
 ### Added
 
 - GitHub Actions workflow (`sonar.yml`) for SonarCloud CI-based analysis with SonarScanner for .NET — triggers on push to main/version branches and pull requests
