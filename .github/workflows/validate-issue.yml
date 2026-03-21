@@ -4,11 +4,12 @@ on:
   issues:
     types: [opened, edited]
 
-permissions:
-  issues: write
+permissions: {}
 
 jobs:
   validate:
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     if: >-
       github.actor != 'dependabot[bot]' &&

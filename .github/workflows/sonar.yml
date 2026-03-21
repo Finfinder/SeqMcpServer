@@ -10,12 +10,13 @@ on:
       - main
       - '[0-9]+.[0-9]+.[0-9]+'
 
-permissions:
-  contents: read
-  pull-requests: read
+permissions: {}
 
 jobs:
   sonar:
+    permissions:
+      contents: read
+      pull-requests: read
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
