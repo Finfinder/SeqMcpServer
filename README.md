@@ -25,8 +25,24 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that c
 ## Prerequisites
 
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
-- A running [Seq](https://datalust.co/seq) instance (local or remote)
+- A running [Seq](https://datalust.co/seq) instance **2025.1 or later** (local or remote)
 - An MCP-compatible client (VS Code, Claude Desktop, Cursor, Windsurf, or any other MCP host)
+
+---
+
+## Version Compatibility
+
+Each SeqMcpServer release is built against a specific version of the [Seq.Api SDK](https://github.com/datalust/seq-api), which determines the minimum required Seq server version. Choose the MCP server version that matches your Seq installation.
+
+| SeqMcpServer | Seq.Api SDK | Seq API | Min. Seq Server | .NET | Status |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 2.0.0 | 2025.2.2 | v11 | 2025.1+ | 9.0 | **Current** |
+| 1.1.0 | 2024.3.0 | v10 | 2024.x and earlier¹ | 9.0 | Maintenance |
+| 1.0.0 | 2024.3.0 | v10 | 2024.x and earlier¹ | 9.0 | Maintenance |
+
+¹ *The Seq.Api SDK version number follows the Seq server release cycle. SDK 2024.3.0 is tested against Seq 2024.x. Older Seq versions supporting API v10 may also work but are not officially tested.*
+
+> **Tip:** Not sure which version to use? If your Seq server is **2025.1 or newer**, use SeqMcpServer **2.0.0**. For Seq **2024.x** or earlier, use SeqMcpServer **1.1.0**. The version compatibility table will be updated as new releases target newer Seq API versions.
 
 ---
 
@@ -306,7 +322,7 @@ SeqMcpServer/
 
 - **Transport:** stdio (standard input/output)
 - **Tool discovery:** Automatic via `[McpServerToolType]` and `[McpServerTool]` attributes
-- **Seq integration:** Dual pattern — [Seq.Api SDK](https://github.com/datalust/seq-api) for typed access, named `HttpClient` for raw API endpoints
+- **Seq integration:** SDK-first approach — [Seq.Api SDK](https://github.com/datalust/seq-api) for typed access (7 tools), named `HttpClient` for raw API endpoints (1 tool)
 - **Error handling:** All tools return JSON-serialized errors — no exceptions propagate to the MCP host
 
 ---
@@ -317,9 +333,11 @@ SeqMcpServer/
 |-----------|---------|
 | .NET | 9.0 |
 | [ModelContextProtocol](https://github.com/modelcontextprotocol/csharp-sdk) | 0.1.0-preview.9 |
-| [Seq.Api](https://github.com/datalust/seq-api) | 2024.3.0 |
+| [Seq.Api](https://github.com/datalust/seq-api) | 2025.2.2 |
 | Microsoft.Extensions.Hosting | 9.0.0 |
 | Microsoft.Extensions.Http | 9.0.0 |
+
+> For a detailed mapping of SeqMcpServer versions to Seq server compatibility, see [Version Compatibility](#version-compatibility).
 
 ---
 
@@ -341,7 +359,7 @@ No external dependencies required — runs entirely in-process with mocked HTTP 
 dotnet test SeqMcpServer.Tests.Integration
 ```
 
-Requires **Docker** — [Testcontainers](https://dotnet.testcontainers.org/) automatically starts a `datalust/seq:latest` container, seeds test data, runs all tests, and cleans up.
+Requires **Docker** — [Testcontainers](https://dotnet.testcontainers.org/) automatically starts a `datalust/seq:2025.2` container, seeds test data, runs all tests, and cleans up.
 
 ### All tests
 

@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-03-22
+
+### Breaking Changes
+
+- Minimum required Seq server version is now **2025.1+** (API media type v11). SeqMcpServer 1.x remains available for older Seq installations using API v10.
+- `seq_get_alerts` output format changed from raw Seq API JSON to projected JSON with fields: `Id`, `OwnerId`, `NotificationLevel`, `NotificationAppInstanceIds`, `Activity`
+
+### Changed
+
+- Upgrade Seq.Api SDK from 2024.3.0 to 2025.2.2
+- Migrate `seq_get_alerts` (AlertsTool) from HTTP pattern (`IHttpClientFactory`) to SDK pattern (`SeqConnection` + `AlertState.ListAsync()` + LINQ projection)
+- Pin Docker image in integration tests from `datalust/seq:latest` to `datalust/seq:2025.2`
+
+### Added
+
+- Version Compatibility table in README mapping SeqMcpServer releases to Seq.Api SDK versions, minimum Seq server requirements, and API media type versions
+
 ## [1.1.0] - 2026-03-22
 
 ### Security

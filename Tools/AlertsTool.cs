@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Text.Json;
 using ModelContextProtocol.Server;
+using Seq.Api;
 
 namespace SeqMcpServer.Tools;
 
@@ -9,15 +10,26 @@ public static class AlertsTool
 {
     [McpServerTool(Name = "seq_get_alerts"), Description("Get all configured alerts and their current state from Seq.")]
     public static async Task<string> GetAlerts(
-        IHttpClientFactory httpClientFactory,
+        SeqConnection connection,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var httpClient = httpClientFactory.CreateClient("Seq");
-            var response = await httpClient.GetAsync("/api/alertstate", cancellationToken);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var alertStates = await connection.AlertState.ListAsync();
+
+            // AlertStateEntity has: Id, OwnerId, NotificationLevel, NotificationAppInstanceIds, Activity
+            var result = alertStates.Select(a => new
+            {
+                a.Id,
+                a.OwnerId,
+                a.NotificationLevel,
+                a.NotificationAppInstanceIds,
+                a.Activity
+            });
+
+            return JsonSerializer.Serialize(result, JsonDefaults.Indented);
         }
         catch (Exception ex)
         {

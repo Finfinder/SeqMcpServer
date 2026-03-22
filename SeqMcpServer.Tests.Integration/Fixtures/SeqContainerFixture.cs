@@ -10,7 +10,7 @@ public class SeqContainerFixture : IAsyncLifetime
     private const ushort SeqPort = 80;
 
     private readonly IContainer _container = new ContainerBuilder()
-        .WithImage("datalust/seq:latest")
+        .WithImage("datalust/seq:2025.2")
         .WithPortBinding(SeqPort, true)
         .WithEnvironment("ACCEPT_EULA", "Y")
         .WithEnvironment("SEQ_FIRSTRUN_NOAUTHENTICATION", "true")

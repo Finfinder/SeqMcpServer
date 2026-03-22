@@ -1,6 +1,5 @@
 using System.Text.Json;
 using SeqMcpServer.Tests.Integration.Fixtures;
-using SeqMcpServer.Tests.Integration.Helpers;
 using SeqMcpServer.Tools;
 
 namespace SeqMcpServer.Tests.Integration;
@@ -18,24 +17,19 @@ public class AlertsToolIntegrationTests
     [Fact]
     public async Task GetAlerts_ReturnsValidJsonWithoutError()
     {
-        var factory = new TestHttpClientFactory(_fixture.SeqUrl);
-
-        var result = await AlertsTool.GetAlerts(factory);
+        var result = await AlertsTool.GetAlerts(_fixture.Connection);
 
         var doc = JsonSerializer.Deserialize<JsonElement>(result);
-        Assert.NotEqual(JsonValueKind.Undefined, doc.ValueKind);
-        Assert.False(doc.ValueKind == JsonValueKind.Object && doc.TryGetProperty("Error", out _),
-            "Expected no Error in response");
+        Assert.Equal(JsonValueKind.Array, doc.ValueKind);
     }
 
     [Fact]
-    public async Task GetAlerts_ResultDeserializesSuccessfully()
+    public async Task GetAlerts_ResultDeserializesWithoutError()
     {
-        var factory = new TestHttpClientFactory(_fixture.SeqUrl);
+        var result = await AlertsTool.GetAlerts(_fixture.Connection);
 
-        var result = await AlertsTool.GetAlerts(factory);
-
-        var exception = Record.Exception(() => JsonSerializer.Deserialize<JsonElement>(result));
-        Assert.Null(exception);
+        var doc = JsonSerializer.Deserialize<JsonElement>(result);
+        Assert.False(doc.ValueKind == JsonValueKind.Object && doc.TryGetProperty("Error", out _),
+            "Expected no Error in response");
     }
 }
