@@ -360,6 +360,31 @@ This project is continuously analyzed by [SonarCloud](https://sonarcloud.io/summ
 - **PR decoration**: SonarCloud automatically posts analysis results as comments on pull requests, including new issues, quality gate status, and coverage changes.
 - **Quality Gate**: The project uses the "Sonar way" quality gate — new code must pass all conditions before merging.
 
+### SonarQube for IDE (Real-time Analysis)
+
+[SonarQube for IDE](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode) (formerly SonarLint) provides real-time code analysis directly in VS Code. With **Connected Mode**, it synchronizes the Quality Profile from SonarCloud, ensuring the same rules are applied locally and in CI.
+
+**Requirements:** Java 17+, SonarCloud account with access to the `finfinder` organization.
+
+**Installation:**
+
+1. Install the extension from VS Code Marketplace: search for "SonarQube for IDE" or run:
+   ```
+   code --install-extension SonarSource.sonarlint-vscode
+   ```
+2. Open this project in VS Code. The extension will detect the `.sonarlint/connectedMode.json` shared binding and prompt you to configure Connected Mode.
+3. Click **"Use Configuration"** when prompted, then provide your **User Token**.
+4. To generate a User Token, go to [SonarCloud Security](https://sonarcloud.io/account/security) and create a new token (type: **User Token**).
+
+> **Important:** Your User Token is personal and must **not** be committed to the repository. Each developer generates their own token.
+
+**What Connected Mode provides:**
+- Synchronized Quality Profile rules from SonarCloud
+- Suppression of issues marked as Accepted/False Positive on the server
+- Focus on new code analysis
+- Smart notifications about Quality Gate changes
+- Branch awareness compatible with the project's versioned branch model
+
 ### SonarQube MCP Server (Optional)
 
 The [SonarQube MCP Server](https://github.com/SonarSource/sonarqube-mcp-server) enables AI agents (GitHub Copilot) to query SonarCloud analysis results directly from VS Code. This integration is used by the `code-reviewer` and `software-engineer` agents.

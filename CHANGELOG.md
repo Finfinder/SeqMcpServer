@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- SonarQube for IDE shared Connected Mode binding (`.sonarlint/connectedMode.json`) for automatic SonarCloud connection setup
+- New `ensuring-code-quality` skill covering the full Sonar ecosystem (SonarQube for IDE, SonarQube MCP Server, SonarCloud CI) and local analyzers
+- SonarQube for IDE awareness in `code-reviewer` and `software-engineer` agents with `ensuring-code-quality` skill reference
+- SonarQube for IDE verification step in `code-reviewing` skill (Step 7) and `codebase-analysing` skill (Step 10)
+- SonarQube for IDE verification step in `review` prompt workflow
+- SonarQube for IDE installation and Connected Mode setup documentation in README
 - Unit tests for error paths (catch blocks) in SDK-based tools: DashboardsTool, QueryLogsTool, RetentionPoliciesTool, SignalsTool, SqlQueryTool
 - Unit tests for DateTime parameter validation in QueryLogsTool and SqlQueryTool
 - Code coverage reporting (OpenCover via coverlet) in SonarCloud workflow — unit and integration tests
