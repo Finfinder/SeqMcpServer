@@ -3,7 +3,7 @@
 [![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-blue)](https://modelcontextprotocol.io/)
 [![Seq](https://img.shields.io/badge/Seq-Centralized%20Logging-0A0A0A)](https://datalust.co/seq)
-[![Version](https://img.shields.io/badge/version-1.1.0-green)]()
+[![Version](https://img.shields.io/badge/version-2.0.0-green)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Finfinder_SeqMcpServer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Finfinder_SeqMcpServer)
 
