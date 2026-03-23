@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [2.0.0] - 2026-03-22
 
+_Released version — no further changes._
+
 ### Breaking Changes
 
 - Minimum required Seq server version is now **2025.1+** (API media type v11). SeqMcpServer 1.x remains available for older Seq installations using API v10.
