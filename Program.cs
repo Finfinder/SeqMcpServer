@@ -17,7 +17,7 @@ var seqApiKey = Environment.GetEnvironmentVariable("SEQ_API_KEY");
 if (!Uri.TryCreate(seqUrl, UriKind.Absolute, out _))
     throw new InvalidOperationException($"Invalid SEQ_URL: '{seqUrl}'");
 
-builder.Services.AddSingleton(new SeqConnection(seqUrl, seqApiKey));
+builder.Services.AddSingleton(sp => new SeqConnection(seqUrl, seqApiKey));
 
 Console.Error.WriteLine(string.IsNullOrEmpty(seqApiKey)
     ? $"WARNING: Seq MCP server v{VersionInfo.Current} \u2014 no SEQ_API_KEY configured, connecting without authentication"

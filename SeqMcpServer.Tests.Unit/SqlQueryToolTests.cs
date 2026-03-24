@@ -10,7 +10,7 @@ public class SqlQueryToolTests
     [Fact]
     public async Task RunSql_CancelledToken_ReturnsJsonWithError()
     {
-        var connection = new SeqConnection("http://localhost");
+        using var connection = new SeqConnection("http://localhost");
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
@@ -25,7 +25,7 @@ public class SqlQueryToolTests
     public async Task RunSql_ConnectionFailure_ReturnsJsonWithError()
     {
         var throwingHandler = new ThrowingHttpMessageHandler(new HttpRequestException("Connection refused"));
-        var connection = new SeqConnection("http://localhost", null, _ => throwingHandler);
+        using var connection = new SeqConnection("http://localhost", null, _ => throwingHandler);
 
         var result = await SqlQueryTool.RunSql(connection, "select 1");
 
@@ -37,7 +37,7 @@ public class SqlQueryToolTests
     [Fact]
     public async Task RunSql_InvalidFromUtcFormat_ReturnsJsonWithError()
     {
-        var connection = new SeqConnection("http://localhost");
+        using var connection = new SeqConnection("http://localhost");
 
         var result = await SqlQueryTool.RunSql(connection, "select 1", fromUtc: "not-a-date");
 
@@ -49,7 +49,7 @@ public class SqlQueryToolTests
     [Fact]
     public async Task RunSql_InvalidToUtcFormat_ReturnsJsonWithError()
     {
-        var connection = new SeqConnection("http://localhost");
+        using var connection = new SeqConnection("http://localhost");
 
         var result = await SqlQueryTool.RunSql(connection, "select 1", toUtc: "not-a-date");
 

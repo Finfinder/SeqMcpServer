@@ -10,7 +10,7 @@ public class RetentionPoliciesToolTests
     [Fact]
     public async Task GetRetentionPolicies_CancelledToken_ReturnsJsonWithError()
     {
-        var connection = new SeqConnection("http://localhost");
+        using var connection = new SeqConnection("http://localhost");
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
@@ -25,7 +25,7 @@ public class RetentionPoliciesToolTests
     public async Task GetRetentionPolicies_ConnectionFailure_ReturnsJsonWithError()
     {
         var throwingHandler = new ThrowingHttpMessageHandler(new HttpRequestException("Connection refused"));
-        var connection = new SeqConnection("http://localhost", null, _ => throwingHandler);
+        using var connection = new SeqConnection("http://localhost", null, _ => throwingHandler);
 
         var result = await RetentionPoliciesTool.GetRetentionPolicies(connection);
 
