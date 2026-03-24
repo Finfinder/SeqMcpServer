@@ -309,6 +309,7 @@ This project uses **version branches** (e.g., `1.0.0`, `1.0.1`, `1.1.0`). Before
 - [ ] `README.md` updated (if applicable)
 - [ ] All `[Description]` attributes present on new tool methods and parameters
 - [ ] No hardcoded credentials or API keys
+- [ ] Security review completed (no OWASP Top 10 issues, inputs validated, no vulnerable dependencies)
 - [ ] Code follows project conventions (naming, style, error handling)
 
 ---

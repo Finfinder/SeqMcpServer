@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Security review checkbox in Pull Request template and CONTRIBUTING.md checklist (OWASP Top 10, input validation, vulnerable dependencies)
+
 ## [2.0.0] - 2026-03-22
 
 _Released version — no further changes._
