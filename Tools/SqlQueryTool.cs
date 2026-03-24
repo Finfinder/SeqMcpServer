@@ -18,12 +18,7 @@ public static class SqlQueryTool
     {
         try
         {
-            var from = string.IsNullOrEmpty(fromUtc)
-                ? DateTime.UtcNow.AddHours(-24)
-                : DateTime.Parse(fromUtc, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            var to = string.IsNullOrEmpty(toUtc)
-                ? DateTime.UtcNow
-                : DateTime.Parse(toUtc, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            var (from, to) = DateRangeHelper.ParseDateRange(fromUtc, toUtc);
 
             // Guard: append LIMIT if query doesn't contain one
             if (!query.Contains("limit", StringComparison.OrdinalIgnoreCase))

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Extract duplicated date-range parsing logic from `QueryLogsTool` and `SqlQueryTool` into shared `DateRangeHelper.ParseDateRange` helper
 - Remove redundant `cancellationToken.ThrowIfCancellationRequested()` from synchronous `VersionTool.GetVersion()` method (dead code — no I/O, no suspension points)
 - Add "Wzorzec lokalny (synchroniczny)" section to `copilot-instructions.md` documenting conventions for synchronous MCP tools
 - Update `Seq.Api` version in `copilot-instructions.md` from 2024.3.0 to 2025.2.2

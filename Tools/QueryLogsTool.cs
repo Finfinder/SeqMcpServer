@@ -21,12 +21,7 @@ public static class QueryLogsTool
         {
             count = Math.Clamp(count, 1, 500);
 
-            var from = string.IsNullOrEmpty(fromUtc)
-                ? DateTime.UtcNow.AddHours(-24)
-                : DateTime.Parse(fromUtc, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            var to = string.IsNullOrEmpty(toUtc)
-                ? DateTime.UtcNow
-                : DateTime.Parse(toUtc, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            var (from, to) = DateRangeHelper.ParseDateRange(fromUtc, toUtc);
 
             cancellationToken.ThrowIfCancellationRequested();
 
