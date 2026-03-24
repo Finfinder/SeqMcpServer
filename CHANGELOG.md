@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Move `Uri.TryCreate` validation before `SeqConnection` instantiation in `Program.cs` to enforce validate-before-use principle
 - Extract duplicated date-range parsing logic from `QueryLogsTool` and `SqlQueryTool` into shared `DateRangeHelper.ParseDateRange` helper
 - Remove redundant `cancellationToken.ThrowIfCancellationRequested()` from synchronous `VersionTool.GetVersion()` method (dead code — no I/O, no suspension points)
 - Add "Wzorzec lokalny (synchroniczny)" section to `copilot-instructions.md` documenting conventions for synchronous MCP tools

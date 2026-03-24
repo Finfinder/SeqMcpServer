@@ -14,10 +14,10 @@ builder.Logging.AddConsole(options =>
 var seqUrl = Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://localhost:5341";
 var seqApiKey = Environment.GetEnvironmentVariable("SEQ_API_KEY");
 
-builder.Services.AddSingleton(new SeqConnection(seqUrl, seqApiKey));
-
 if (!Uri.TryCreate(seqUrl, UriKind.Absolute, out _))
     throw new InvalidOperationException($"Invalid SEQ_URL: '{seqUrl}'");
+
+builder.Services.AddSingleton(new SeqConnection(seqUrl, seqApiKey));
 
 Console.Error.WriteLine(string.IsNullOrEmpty(seqApiKey)
     ? $"WARNING: Seq MCP server v{VersionInfo.Current} \u2014 no SEQ_API_KEY configured, connecting without authentication"
