@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Remove redundant `cancellationToken.ThrowIfCancellationRequested()` from synchronous `VersionTool.GetVersion()` method (dead code — no I/O, no suspension points)
+- Add "Wzorzec lokalny (synchroniczny)" section to `copilot-instructions.md` documenting conventions for synchronous MCP tools
+- Update `Seq.Api` version in `copilot-instructions.md` from 2024.3.0 to 2025.2.2
+
 ### Added
 
 - Security review checkbox in Pull Request template and CONTRIBUTING.md checklist (OWASP Top 10, input validation, vulnerable dependencies)

@@ -13,8 +13,6 @@ public static class VersionTool
     {
         try
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var result = new
             {
                 Name = "seq-mcp-server",
