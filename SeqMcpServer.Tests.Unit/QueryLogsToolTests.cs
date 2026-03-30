@@ -44,6 +44,7 @@ public class QueryLogsToolTests
         using var doc = JsonDocument.Parse(result);
         var error = doc.RootElement.GetProperty("Error").GetString();
         Assert.Contains("Failed to query Seq events:", error);
+        Assert.Contains("fromUtc", error);
     }
 
     [Fact]
@@ -56,5 +57,6 @@ public class QueryLogsToolTests
         using var doc = JsonDocument.Parse(result);
         var error = doc.RootElement.GetProperty("Error").GetString();
         Assert.Contains("Failed to query Seq events:", error);
+        Assert.Contains("toUtc", error);
     }
 }

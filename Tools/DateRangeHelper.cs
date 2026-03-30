@@ -6,11 +6,25 @@ internal static class DateRangeHelper
     {
         var from = string.IsNullOrEmpty(fromUtc)
             ? DateTime.UtcNow.AddHours(-24)
-            : DateTime.Parse(fromUtc, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            : ParseIso8601(fromUtc, nameof(fromUtc));
         var to = string.IsNullOrEmpty(toUtc)
             ? DateTime.UtcNow
-            : DateTime.Parse(toUtc, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            : ParseIso8601(toUtc, nameof(toUtc));
 
         return (from, to);
+    }
+
+    private static DateTime ParseIso8601(string value, string parameterName)
+    {
+        try
+        {
+            return DateTime.Parse(value, null, System.Globalization.DateTimeStyles.RoundtripKind);
+        }
+        catch (FormatException)
+        {
+            throw new ArgumentException(
+                $"Invalid {parameterName} date format: '{value}'. Expected ISO 8601.",
+                parameterName);
+        }
     }
 }

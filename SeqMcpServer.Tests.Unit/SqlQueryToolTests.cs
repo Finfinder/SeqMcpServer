@@ -61,6 +61,7 @@ public class SqlQueryToolTests
         using var doc = JsonDocument.Parse(result);
         var error = doc.RootElement.GetProperty("Error").GetString();
         Assert.Contains("Failed to execute Seq SQL query:", error);
+        Assert.Contains("fromUtc", error);
     }
 
     [Fact]
@@ -73,6 +74,7 @@ public class SqlQueryToolTests
         using var doc = JsonDocument.Parse(result);
         var error = doc.RootElement.GetProperty("Error").GetString();
         Assert.Contains("Failed to execute Seq SQL query:", error);
+        Assert.Contains("toUtc", error);
     }
 
     [Theory]

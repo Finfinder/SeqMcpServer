@@ -40,17 +40,33 @@ public class DateRangeHelperTests
     }
 
     [Fact]
-    public void ParseDateRange_InvalidFromUtc_ThrowsFormatException()
+    public void ParseDateRange_InvalidFromUtc_ThrowsArgumentException()
     {
-        Assert.Throws<FormatException>(() =>
+        var ex = Assert.Throws<ArgumentException>(() =>
             DateRangeHelper.ParseDateRange("not-a-date", null));
+
+        Assert.Contains("fromUtc", ex.Message);
+        Assert.Contains("not-a-date", ex.Message);
     }
 
     [Fact]
-    public void ParseDateRange_InvalidToUtc_ThrowsFormatException()
+    public void ParseDateRange_InvalidToUtc_ThrowsArgumentException()
     {
-        Assert.Throws<FormatException>(() =>
+        var ex = Assert.Throws<ArgumentException>(() =>
             DateRangeHelper.ParseDateRange(null, "not-a-date"));
+
+        Assert.Contains("toUtc", ex.Message);
+        Assert.Contains("not-a-date", ex.Message);
+    }
+
+    [Fact]
+    public void ParseDateRange_BothInvalid_ReportsFromUtcFirst()
+    {
+        var ex = Assert.Throws<ArgumentException>(() =>
+            DateRangeHelper.ParseDateRange("bad-from", "bad-to"));
+
+        Assert.Contains("fromUtc", ex.Message);
+        Assert.Contains("bad-from", ex.Message);
     }
 
     [Fact]
