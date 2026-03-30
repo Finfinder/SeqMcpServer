@@ -19,6 +19,9 @@ public static class SqlQueryTool
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(query))
+                return JsonSerializer.Serialize(new { Error = "Query cannot be empty." });
+
             var (from, to) = DateRangeHelper.ParseDateRange(fromUtc, toUtc);
 
             // Guard: append LIMIT if query doesn't contain one

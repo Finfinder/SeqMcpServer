@@ -7,6 +7,23 @@ namespace SeqMcpServer.Tests.Unit;
 
 public class SqlQueryToolTests
 {
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("  ")]
+    [InlineData("\t")]
+    [InlineData("\n")]
+    public async Task RunSql_EmptyOrWhitespaceQuery_ReturnsJsonWithError(string query)
+    {
+        using var connection = new SeqConnection("http://localhost");
+
+        var result = await SqlQueryTool.RunSql(connection, query);
+
+        using var doc = JsonDocument.Parse(result);
+        var error = doc.RootElement.GetProperty("Error").GetString();
+        Assert.Equal("Query cannot be empty.", error);
+    }
+
     [Fact]
     public async Task RunSql_CancelledToken_ReturnsJsonWithError()
     {

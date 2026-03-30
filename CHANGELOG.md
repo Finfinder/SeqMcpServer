@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Add empty query validation in `SqlQueryTool` to return clear error instead of forwarding empty SQL to Seq engine
 - Fix false-positive LIMIT detection in `SqlQueryTool` that skipped auto-injection when "limit" appeared as column name, comment, string literal, or alias
 
 ## [2.0.0] - 2026-03-22
