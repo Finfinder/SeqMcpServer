@@ -57,4 +57,25 @@ public class SqlQueryToolTests
         var error = doc.RootElement.GetProperty("Error").GetString();
         Assert.Contains("Failed to execute Seq SQL query:", error);
     }
+
+    [Theory]
+    [InlineData("select rate_limit from stream")]
+    [InlineData("select * from stream -- no limit")]
+    [InlineData("select * from stream where msg = 'speed limit'")]
+    [InlineData("select x AS limited_data from stream")]
+    [InlineData("select * from stream")]
+    public void HasLimitClause_QueryWithoutLimitClause_ReturnsFalse(string query)
+    {
+        Assert.False(SqlQueryTool.HasLimitClause(query));
+    }
+
+    [Theory]
+    [InlineData("select * from stream limit 10")]
+    [InlineData("select * from stream LIMIT 100")]
+    [InlineData("select * from stream limit 10 offset 5")]
+    [InlineData("select * from stream\nLIMIT 50")]
+    public void HasLimitClause_QueryWithLimitClause_ReturnsTrue(string query)
+    {
+        Assert.True(SqlQueryTool.HasLimitClause(query));
+    }
 }

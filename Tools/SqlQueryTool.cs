@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using ModelContextProtocol.Server;
 using Seq.Api;
 
@@ -21,7 +22,7 @@ public static class SqlQueryTool
             var (from, to) = DateRangeHelper.ParseDateRange(fromUtc, toUtc);
 
             // Guard: append LIMIT if query doesn't contain one
-            if (!query.Contains("limit", StringComparison.OrdinalIgnoreCase))
+            if (!HasLimitClause(query))
                 query += " limit 1000";
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -36,4 +37,7 @@ public static class SqlQueryTool
             return JsonSerializer.Serialize(new { Error = $"Failed to execute Seq SQL query: {ex.Message}" });
         }
     }
+
+    internal static bool HasLimitClause(string query) =>
+        Regex.IsMatch(query, @"\bLIMIT\s+\d+", RegexOptions.IgnoreCase);
 }
