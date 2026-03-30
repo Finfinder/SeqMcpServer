@@ -39,5 +39,5 @@ public static class SqlQueryTool
     }
 
     internal static bool HasLimitClause(string query) =>
-        Regex.IsMatch(query, @"\bLIMIT\s+\d+", RegexOptions.IgnoreCase);
+        Regex.IsMatch(query, @"\bLIMIT\s+\d+", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
 }
