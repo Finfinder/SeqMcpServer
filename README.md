@@ -328,6 +328,18 @@ SeqMcpServer/
 
 ---
 
+## Security Considerations
+
+SeqMcpServer acts as a **transparent proxy** between the AI agent (LLM) and the Seq API. User-provided SQL queries (`seq_run_sql`) and filter expressions (`seq_query_logs`) are forwarded to Seq without server-side sanitization. This is by design:
+
+- **Seq SQL is read-only** — the Seq query language supports only `SELECT` statements and aggregations over the event stream. There are no DML operations (INSERT, UPDATE, DELETE) or DDL operations (CREATE, DROP, ALTER).
+- **Authorization is enforced by Seq** — the Seq server controls access based on the API key permissions. The MCP server does not implement its own authorization layer.
+- **Built-in guardrails** — the MCP server automatically appends `LIMIT 1000` to SQL queries that lack a limit clause and clamps the event count to 1–500 for log queries, preventing excessive data retrieval.
+
+> **Recommendation:** Always use a Seq API key with the **minimum required permissions** (principle of least privilege). If the key only needs read access to logs, do not grant administrative or write permissions. See the [Seq API key documentation](https://docs.datalust.co/docs/api-keys) for details on configuring key permissions.
+
+---
+
 ## Tech Stack
 
 | Component | Version |

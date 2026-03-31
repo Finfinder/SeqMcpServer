@@ -25,6 +25,9 @@ public static class QueryLogsTool
 
             cancellationToken.ThrowIfCancellationRequested();
 
+            // Security: the filter expression is passed to Seq API without server-side sanitization (transparent proxy by design).
+            // Seq parses and validates the filter expression server-side.
+            // Authorization and query restrictions are enforced by the Seq server based on the API key permissions.
             var events = await connection.Events.ListAsync(
                 filter: string.IsNullOrEmpty(filter) ? null : filter,
                 count: count,

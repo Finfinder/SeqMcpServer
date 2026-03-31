@@ -30,6 +30,9 @@ public static class SqlQueryTool
 
             cancellationToken.ThrowIfCancellationRequested();
 
+            // Security: the SQL query is passed to Seq API without server-side sanitization (transparent proxy by design).
+            // Seq SQL is a read-only query language (SELECT and aggregations only — no DML operations exist).
+            // Authorization and query restrictions are enforced by the Seq server based on the API key permissions.
             var result = await connection.Data.QueryAsync(query, rangeStartUtc: from, rangeEndUtc: to);
 
             var output = new { result.Columns, result.Rows };

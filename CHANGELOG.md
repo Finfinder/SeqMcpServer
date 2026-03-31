@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Security comments in `SqlQueryTool` and `QueryLogsTool` documenting the transparent proxy design — SQL queries and filter expressions are forwarded to Seq API without server-side sanitization (accepted risk: Seq SQL is read-only, authorization enforced by Seq server)
+- "Security Considerations" section in README documenting the transparent proxy model, read-only Seq SQL, API key authorization, and least-privilege recommendation
+- Transparent proxy guideline in CONTRIBUTING.md Security section for contributors adding new tools
 - Security review checkbox in Pull Request template and CONTRIBUTING.md checklist (OWASP Top 10, input validation, vulnerable dependencies)
 
 ### Fixed

@@ -20,6 +20,7 @@ When contributing, keep the following security guidelines in mind:
 - **Report vulnerabilities privately** through [GitHub Security Advisories](https://github.com/Finfinder/SeqMcpServer/security/advisories/new) — never through public issues or pull requests
 - **Do not introduce dependencies with known vulnerabilities** — vet any new packages before adding them
 - **Validate all user inputs** (MCP tool parameters) — use input clamping (`Math.Clamp`) and enforce query limits (e.g., automatic `LIMIT` for SQL) to protect against injection and excessive load on Seq
+- **Transparent proxy design** — SQL queries and filter expressions are forwarded to the Seq API without server-side sanitization. Seq handles parsing, validation, and authorization. When adding new tools that pass user input to Seq, document this pattern with a `// Security:` comment above the API call
 
 ---
 
