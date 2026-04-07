@@ -1,5 +1,6 @@
 using System.Text.Json;
 using SeqMcpServer.Tests.Integration.Fixtures;
+using SeqMcpServer.Tests.Integration.Helpers;
 using SeqMcpServer.Tools;
 
 namespace SeqMcpServer.Tests.Integration;
@@ -40,8 +41,6 @@ public class SignalsToolTests
     {
         var result = await SignalsTool.ListSignals(_fixture.Connection);
 
-        var doc = JsonSerializer.Deserialize<JsonElement>(result);
-        Assert.False(doc.ValueKind == JsonValueKind.Object && doc.TryGetProperty("Error", out _),
-            "Expected no Error in response");
+        ToolAssertions.AssertNoToolError(result);
     }
 }

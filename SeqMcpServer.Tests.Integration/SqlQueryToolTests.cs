@@ -1,5 +1,6 @@
 using System.Text.Json;
 using SeqMcpServer.Tests.Integration.Fixtures;
+using SeqMcpServer.Tests.Integration.Helpers;
 using SeqMcpServer.Tools;
 
 namespace SeqMcpServer.Tests.Integration;
@@ -40,7 +41,7 @@ public class SqlQueryToolTests
             toUtc: "2025-01-16T00:00:00Z");
 
         var doc = JsonSerializer.Deserialize<JsonElement>(result);
-        Assert.False(doc.TryGetProperty("Error", out _), "Expected no Error in response");
+        ToolAssertions.AssertNoToolError(result);
         Assert.True(doc.TryGetProperty("Columns", out _));
         Assert.True(doc.TryGetProperty("Rows", out _));
     }
@@ -55,7 +56,7 @@ public class SqlQueryToolTests
             toUtc: "2025-01-16T00:00:00Z");
 
         var doc = JsonSerializer.Deserialize<JsonElement>(result);
-        Assert.False(doc.TryGetProperty("Error", out _), "Expected no Error in response");
+        ToolAssertions.AssertNoToolError(result);
         Assert.True(doc.TryGetProperty("Rows", out var rows));
         Assert.True(rows.GetArrayLength() <= 10);
     }
@@ -71,6 +72,6 @@ public class SqlQueryToolTests
 
         var doc = JsonSerializer.Deserialize<JsonElement>(result);
         Assert.NotEqual(JsonValueKind.Undefined, doc.ValueKind);
-        Assert.False(doc.TryGetProperty("Error", out _), "Expected no Error in response");
+        ToolAssertions.AssertNoToolError(result);
     }
 }
