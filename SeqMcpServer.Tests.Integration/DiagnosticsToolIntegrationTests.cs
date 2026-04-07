@@ -17,7 +17,7 @@ public class DiagnosticsToolIntegrationTests
     [Fact]
     public async Task GetDiagnostics_ReturnsNonEmptyResponse()
     {
-        var factory = new TestHttpClientFactory(_fixture.SeqUrl);
+        using var factory = new TestHttpClientFactory(_fixture.SeqUrl);
 
         var result = await DiagnosticsTool.GetDiagnostics(factory);
 
@@ -28,7 +28,7 @@ public class DiagnosticsToolIntegrationTests
     [Fact]
     public async Task GetDiagnostics_DoesNotReturnError()
     {
-        var factory = new TestHttpClientFactory(_fixture.SeqUrl);
+        using var factory = new TestHttpClientFactory(_fixture.SeqUrl);
 
         var result = await DiagnosticsTool.GetDiagnostics(factory);
 

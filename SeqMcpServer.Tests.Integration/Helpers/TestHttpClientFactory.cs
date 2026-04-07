@@ -1,8 +1,9 @@
 namespace SeqMcpServer.Tests.Integration.Helpers;
 
-internal class TestHttpClientFactory : IHttpClientFactory
+internal sealed class TestHttpClientFactory : IHttpClientFactory, IDisposable
 {
     private readonly string _baseAddress;
+    private HttpClient? _httpClient;
 
     public TestHttpClientFactory(string baseAddress)
     {
@@ -11,6 +12,12 @@ internal class TestHttpClientFactory : IHttpClientFactory
 
     public HttpClient CreateClient(string name)
     {
-        return new HttpClient { BaseAddress = new Uri(_baseAddress) };
+        _httpClient ??= new HttpClient { BaseAddress = new Uri(_baseAddress) };
+        return _httpClient;
+    }
+
+    public void Dispose()
+    {
+        _httpClient?.Dispose();
     }
 }
