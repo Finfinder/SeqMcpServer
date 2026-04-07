@@ -75,4 +75,36 @@ public class SqlQueryToolTests : SdkToolTestBase
     {
         Assert.True(SqlQueryTool.HasLimitClause(query));
     }
+
+    [Fact]
+    public void HasLimitClause_EmptyString_ReturnsFalse()
+    {
+        Assert.False(SqlQueryTool.HasLimitClause(""));
+    }
+
+    [Fact]
+    public void HasLimitClause_LimitKeywordWithoutNumber_ReturnsFalse()
+    {
+        Assert.False(SqlQueryTool.HasLimitClause("select * from stream limit"));
+    }
+
+    [Fact]
+    public void HasLimitClause_LimitZero_ReturnsTrue()
+    {
+        // "limit 0" matches \bLIMIT\s+\d+ because 0 is a digit
+        Assert.True(SqlQueryTool.HasLimitClause("select * from stream limit 0"));
+    }
+
+    [Fact]
+    public async Task RunSql_InvalidBothDates_ReportsFromUtcFirst()
+    {
+        using var connection = new SeqConnection("http://localhost");
+
+        var result = await SqlQueryTool.RunSql(connection, "select 1", fromUtc: "bad-from", toUtc: "bad-to");
+
+        using var doc = JsonDocument.Parse(result);
+        var error = doc.RootElement.GetProperty("Error").GetString();
+        Assert.Contains("fromUtc", error);
+        Assert.Contains("bad-from", error);
+    }
 }

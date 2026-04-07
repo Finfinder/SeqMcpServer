@@ -20,18 +20,23 @@ public static class RetentionPoliciesTool
             var policies = await connection.RetentionPolicies.ListAsync();
 
             // RetentionPolicyEntity has: RetentionTime (TimeSpan), RemovedSignalExpression (SignalExpressionPart)
-            var result = policies.Select(p => new
-            {
-                p.Id,
-                RetentionDays = p.RetentionTime.TotalDays,
-                RemovedSignalExpression = p.RemovedSignalExpression?.ToString()
-            });
-
-            return JsonSerializer.Serialize(result, JsonDefaults.Indented);
+            return ProjectToJson(policies);
         }
         catch (Exception ex)
         {
             return JsonSerializer.Serialize(new { Error = $"Failed to get Seq retention policies: {ex.Message}" });
         }
+    }
+
+    internal static string ProjectToJson(IEnumerable<Seq.Api.Model.Retention.RetentionPolicyEntity> policies)
+    {
+        var result = policies.Select(p => new
+        {
+            p.Id,
+            RetentionDays = p.RetentionTime.TotalDays,
+            RemovedSignalExpression = p.RemovedSignalExpression?.ToString()
+        });
+
+        return JsonSerializer.Serialize(result, JsonDefaults.Indented);
     }
 }

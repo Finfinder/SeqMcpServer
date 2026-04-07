@@ -22,27 +22,32 @@ public static class DashboardsTool
             // DashboardEntity has: Id, Title, OwnerId, IsProtected, SignalExpression, Charts
             // ChartPart has: Id, Title, Queries (List<ChartQueryPart>), SignalExpression
             // ChartQueryPart has: Where, Measurements, GroupBy, Having, OrderBy, Limit
-            var result = dashboards.Select(d => new
-            {
-                d.Id,
-                d.Title,
-                Charts = d.Charts?.Select(c => new
-                {
-                    c.Id,
-                    c.Title,
-                    Queries = c.Queries?.Select(q => new
-                    {
-                        q.Where,
-                        q.GroupBy
-                    })
-                })
-            });
-
-            return JsonSerializer.Serialize(result, JsonDefaults.Indented);
+            return ProjectToJson(dashboards);
         }
         catch (Exception ex)
         {
             return JsonSerializer.Serialize(new { Error = $"Failed to list Seq dashboards: {ex.Message}" });
         }
+    }
+
+    internal static string ProjectToJson(IEnumerable<Seq.Api.Model.Dashboarding.DashboardEntity> dashboards)
+    {
+        var result = dashboards.Select(d => new
+        {
+            d.Id,
+            d.Title,
+            Charts = d.Charts?.Select(c => new
+            {
+                c.Id,
+                c.Title,
+                Queries = c.Queries?.Select(q => new
+                {
+                    q.Where,
+                    q.GroupBy
+                })
+            })
+        });
+
+        return JsonSerializer.Serialize(result, JsonDefaults.Indented);
     }
 }

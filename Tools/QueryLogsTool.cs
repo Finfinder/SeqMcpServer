@@ -37,23 +37,28 @@ public static class QueryLogsTool
 
             // EventEntity.Properties is List<EventPropertyPart> with .Name / .Value
             // EventEntity.Timestamp is string (ISO-8601), Level is string
-            var result = events.Select(e => new
-            {
-                e.Id,
-                e.Timestamp,
-                e.Level,
-                Message = e.RenderedMessage,
-                Exception = e.Exception,
-                Properties = e.Properties?
-                    .Where(p => !p.Name.StartsWith("@"))
-                    .ToDictionary(p => p.Name, p => p.Value?.ToString())
-            });
-
-            return JsonSerializer.Serialize(result, JsonDefaults.Indented);
+            return ProjectToJson(events);
         }
         catch (Exception ex)
         {
             return JsonSerializer.Serialize(new { Error = $"Failed to query Seq events: {ex.Message}" });
         }
+    }
+
+    internal static string ProjectToJson(IEnumerable<Seq.Api.Model.Events.EventEntity> events)
+    {
+        var result = events.Select(e => new
+        {
+            e.Id,
+            e.Timestamp,
+            e.Level,
+            Message = e.RenderedMessage,
+            Exception = e.Exception,
+            Properties = e.Properties?
+                .Where(p => !p.Name.StartsWith('@'))
+                .ToDictionary(p => p.Name, p => p.Value?.ToString())
+        });
+
+        return JsonSerializer.Serialize(result, JsonDefaults.Indented);
     }
 }

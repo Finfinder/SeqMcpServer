@@ -20,19 +20,24 @@ public static class SignalsTool
             var signals = await connection.Signals.ListAsync(shared: true);
 
             // SignalEntity.Filters is List<DescriptiveFilterPart>, each has .Filter (string)
-            var result = signals.Select(s => new
-            {
-                s.Id,
-                s.Title,
-                s.Description,
-                Filters = s.Filters?.Select(f => f.Filter)
-            });
-
-            return JsonSerializer.Serialize(result, JsonDefaults.Indented);
+            return ProjectToJson(signals);
         }
         catch (Exception ex)
         {
             return JsonSerializer.Serialize(new { Error = $"Failed to list Seq signals: {ex.Message}" });
         }
+    }
+
+    internal static string ProjectToJson(IEnumerable<Seq.Api.Model.Signals.SignalEntity> signals)
+    {
+        var result = signals.Select(s => new
+        {
+            s.Id,
+            s.Title,
+            s.Description,
+            Filters = s.Filters?.Select(f => f.Filter)
+        });
+
+        return JsonSerializer.Serialize(result, JsonDefaults.Indented);
     }
 }

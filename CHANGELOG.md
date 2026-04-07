@@ -17,9 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Update `Seq.Api` version in `copilot-instructions.md` from 2024.3.0 to 2025.2.2
 - Use explicit `CultureInfo.InvariantCulture` instead of `null` in `DateRangeHelper.ParseIso8601` to eliminate dependency on thread culture
 - Extract `SdkToolTestBase` abstract base class and `HttpClientFactoryHelper` to deduplicate error-handling test patterns across SDK and HTTP tool tests
+- Extract LINQ projection logic from `QueryLogsTool`, `SignalsTool`, `DashboardsTool`, and `RetentionPoliciesTool` into `internal static ProjectToJson()` methods for unit testability
+- Use `StartsWith(char)` instead of `StartsWith(string)` in `QueryLogsTool` property filtering (CA1866/S6610)
 
 ### Added
 
+- Unit tests for SDK tool projection logic: `QueryLogsTool` (17 tests), `SignalsTool` (6 tests), `DashboardsTool` (5 tests), `RetentionPoliciesTool` (6 tests) covering empty lists, null handling, type conversions, and nested structures
+- Additional `SqlQueryTool` edge case tests: empty string, limit-without-number, limit-zero, and dual invalid dates (4 tests)
 - Security comments in `SqlQueryTool` and `QueryLogsTool` documenting the transparent proxy design — SQL queries and filter expressions are forwarded to Seq API without server-side sanitization (accepted risk: Seq SQL is read-only, authorization enforced by Seq server)
 - "Security Considerations" section in README documenting the transparent proxy model, read-only Seq SQL, API key authorization, and least-privilege recommendation
 - Transparent proxy guideline in CONTRIBUTING.md Security section for contributors adding new tools
