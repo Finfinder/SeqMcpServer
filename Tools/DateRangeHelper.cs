@@ -18,7 +18,7 @@ internal static class DateRangeHelper
     {
         try
         {
-            return DateTime.Parse(value, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            return DateTime.Parse(value, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind);
         }
         catch (FormatException)
         {

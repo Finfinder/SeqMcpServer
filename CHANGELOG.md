@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Remove redundant `cancellationToken.ThrowIfCancellationRequested()` from synchronous `VersionTool.GetVersion()` method (dead code — no I/O, no suspension points)
 - Add "Wzorzec lokalny (synchroniczny)" section to `copilot-instructions.md` documenting conventions for synchronous MCP tools
 - Update `Seq.Api` version in `copilot-instructions.md` from 2024.3.0 to 2025.2.2
+- Use explicit `CultureInfo.InvariantCulture` instead of `null` in `DateRangeHelper.ParseIso8601` to eliminate dependency on thread culture
 
 ### Added
 
