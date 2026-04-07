@@ -12,7 +12,7 @@ public class DiagnosticsToolTests
     public async Task GetDiagnostics_SuccessfulResponse_ReturnsRawJson()
     {
         var expectedJson = """{"Status":"Running","Uptime":"01:30:00"}""";
-        var factory = CreateFactory(HttpStatusCode.OK, expectedJson);
+        var factory = HttpClientFactoryHelper.CreateFactory(HttpStatusCode.OK, expectedJson);
 
         var result = await DiagnosticsTool.GetDiagnostics(factory);
 
@@ -22,7 +22,7 @@ public class DiagnosticsToolTests
     [Fact]
     public async Task GetDiagnostics_ServerError_ReturnsJsonWithError()
     {
-        var factory = CreateFactory(HttpStatusCode.InternalServerError, "Internal Server Error");
+        var factory = HttpClientFactoryHelper.CreateFactory(HttpStatusCode.InternalServerError, "Internal Server Error");
 
         var result = await DiagnosticsTool.GetDiagnostics(factory);
 
@@ -44,14 +44,5 @@ public class DiagnosticsToolTests
         using var doc = JsonDocument.Parse(result);
         var error = doc.RootElement.GetProperty("Error").GetString();
         Assert.Contains("Failed to get Seq diagnostics:", error);
-    }
-
-    private static IHttpClientFactory CreateFactory(HttpStatusCode statusCode, string content)
-    {
-        var handler = new MockHttpMessageHandler(statusCode, content);
-        var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://localhost") };
-        var factory = Substitute.For<IHttpClientFactory>();
-        factory.CreateClient("Seq").Returns(httpClient);
-        return factory;
     }
 }

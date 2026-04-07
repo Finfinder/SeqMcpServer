@@ -5,8 +5,13 @@ using SeqMcpServer.Tools;
 
 namespace SeqMcpServer.Tests.Unit;
 
-public class SqlQueryToolTests
+public class SqlQueryToolTests : SdkToolTestBase
 {
+    protected override string ExpectedErrorSubstring => "Failed to execute Seq SQL query:";
+
+    protected override Task<string> InvokeTool(SeqConnection connection, CancellationToken cancellationToken = default) =>
+        SqlQueryTool.RunSql(connection, "select 1", cancellationToken: cancellationToken);
+
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
@@ -22,33 +27,6 @@ public class SqlQueryToolTests
         using var doc = JsonDocument.Parse(result);
         var error = doc.RootElement.GetProperty("Error").GetString();
         Assert.Equal("Query cannot be empty.", error);
-    }
-
-    [Fact]
-    public async Task RunSql_CancelledToken_ReturnsJsonWithError()
-    {
-        using var connection = new SeqConnection("http://localhost");
-        using var cts = new CancellationTokenSource();
-        cts.Cancel();
-
-        var result = await SqlQueryTool.RunSql(connection, "select 1", cancellationToken: cts.Token);
-
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to execute Seq SQL query:", error);
-    }
-
-    [Fact]
-    public async Task RunSql_ConnectionFailure_ReturnsJsonWithError()
-    {
-        var throwingHandler = new ThrowingHttpMessageHandler(new HttpRequestException("Connection refused"));
-        using var connection = new SeqConnection("http://localhost", null, _ => throwingHandler);
-
-        var result = await SqlQueryTool.RunSql(connection, "select 1");
-
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to execute Seq SQL query:", error);
     }
 
     [Fact]

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Add "Wzorzec lokalny (synchroniczny)" section to `copilot-instructions.md` documenting conventions for synchronous MCP tools
 - Update `Seq.Api` version in `copilot-instructions.md` from 2024.3.0 to 2025.2.2
 - Use explicit `CultureInfo.InvariantCulture` instead of `null` in `DateRangeHelper.ParseIso8601` to eliminate dependency on thread culture
+- Extract `SdkToolTestBase` abstract base class and `HttpClientFactoryHelper` to deduplicate error-handling test patterns across SDK and HTTP tool tests
 
 ### Added
 

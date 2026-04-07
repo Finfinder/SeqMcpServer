@@ -1,36 +1,13 @@
-using System.Text.Json;
 using Seq.Api;
 using SeqMcpServer.Tests.Unit.Helpers;
 using SeqMcpServer.Tools;
 
 namespace SeqMcpServer.Tests.Unit;
 
-public class DashboardsToolTests
+public class DashboardsToolTests : SdkToolTestBase
 {
-    [Fact]
-    public async Task ListDashboards_CancelledToken_ReturnsJsonWithError()
-    {
-        using var connection = new SeqConnection("http://localhost");
-        using var cts = new CancellationTokenSource();
-        cts.Cancel();
+    protected override string ExpectedErrorSubstring => "Failed to list Seq dashboards:";
 
-        var result = await DashboardsTool.ListDashboards(connection, cts.Token);
-
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to list Seq dashboards:", error);
-    }
-
-    [Fact]
-    public async Task ListDashboards_ConnectionFailure_ReturnsJsonWithError()
-    {
-        var throwingHandler = new ThrowingHttpMessageHandler(new HttpRequestException("Connection refused"));
-        using var connection = new SeqConnection("http://localhost", null, _ => throwingHandler);
-
-        var result = await DashboardsTool.ListDashboards(connection);
-
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to list Seq dashboards:", error);
-    }
+    protected override Task<string> InvokeTool(SeqConnection connection, CancellationToken cancellationToken = default) =>
+        DashboardsTool.ListDashboards(connection, cancellationToken);
 }
