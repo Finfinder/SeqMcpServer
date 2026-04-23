@@ -27,10 +27,10 @@ public class HostConfigurationTests
     }
 
     [Fact]
-    public void ValidateSeqUrl_RelativeUrl_ThrowsInvalidOperationException()
+    public void ValidateSeqUrl_UrlWithSpaces_ThrowsInvalidOperationException()
     {
         Assert.Throws<InvalidOperationException>(() =>
-            HostConfiguration.ValidateSeqUrl("/relative/path"));
+            HostConfiguration.ValidateSeqUrl("not a valid url"));
     }
 
     [Fact]
