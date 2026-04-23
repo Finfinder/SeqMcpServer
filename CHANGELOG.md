@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Extract configuration logic from `Program.cs` top-level statements into `internal static class HostConfiguration` with three methods: `ResolveConfiguration()`, `ValidateSeqUrl()`, and `ConfigureServices()` — enables unit testing without running the full host
 - Fix HttpClient resource leak in `TestHttpClientFactory` — cache single `HttpClient` instance, implement `IDisposable` with `sealed` class, use `using var` in `DiagnosticsToolIntegrationTests`
 - Extract shared `AssertNoToolError(string json)` assertion helper in integration tests to eliminate duplicated "no error" pattern across 6 test classes (8 occurrences)
 - Switch `SeqConnection` DI registration from externally-created instance to factory delegate to ensure proper disposal on host shutdown
