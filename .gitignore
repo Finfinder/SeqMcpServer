@@ -14,6 +14,7 @@ SeqMcpServer.code-workspace
 !.github/ISSUE_TEMPLATE/
 !.github/PULL_REQUEST_TEMPLATE.md
 !.github/workflows/
+!.github/versioning/
 
 # .NET build and publish artifacts
 bin/

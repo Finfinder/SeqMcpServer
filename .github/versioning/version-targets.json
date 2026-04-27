@@ -1,0 +1,6 @@
+[
+  {
+    "path": "SeqMcpServer.csproj",
+    "strategy": "dotnet_project_version"
+  }
+]
