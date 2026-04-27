@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `.github/workflows/open-next-version-branch.yml`: automated next-version branch creation triggered by successful Release workflow; updates `SeqMcpServer.csproj` (`<Version>`) and `README.md` with the `next_version` provided before the release
+- `.github/workflows/release.yml`: extended with validation and upload of `next-version-request` artifact for the central automation workflow in `AI_Instruction`
+
 ### Changed
 
 - Extract configuration logic from `Program.cs` top-level statements into `internal static class HostConfiguration` with three methods: `ResolveConfiguration()`, `ValidateSeqUrl()`, and `ConfigureServices()` — enables unit testing without running the full host
