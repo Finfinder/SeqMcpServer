@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- `.gitignore`: add `!.github/release/` exception so `next-version.json` is not blocked by the blanket `.github/*` rule during release validation
 - Improve date parsing error messages in `DateRangeHelper.ParseDateRange` — invalid dates now report the specific parameter name (`fromUtc`/`toUtc`) and the invalid value instead of a generic `FormatException`
 - Add empty query validation in `SqlQueryTool` to return clear error instead of forwarding empty SQL to Seq engine
 - Fix false-positive LIMIT detection in `SqlQueryTool` that skipped auto-injection when "limit" appeared as column name, comment, string literal, or alias
