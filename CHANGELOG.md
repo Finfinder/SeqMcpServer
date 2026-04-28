@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - `.github/workflows/open-next-version-branch.yml`: automated next-version branch creation triggered by successful Release workflow; updates `SeqMcpServer.csproj` (`<Version>`) and `README.md` with the `next_version` provided before the release
 - `.github/workflows/release.yml`: extended with validation and upload of `next-version-request` artifact for the central automation workflow in `AI_Instruction`
+- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: contract test asserting shared reusable workflows (`reusable-version-consistency`, `reusable-next-version-request`) are used in `release.yml` and the release job waits for `next-version-request`.
 
 ### Changed
 
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Extract `SdkToolTestBase` abstract base class and `HttpClientFactoryHelper` to deduplicate error-handling test patterns across SDK and HTTP tool tests
 - Extract LINQ projection logic from `QueryLogsTool`, `SignalsTool`, `DashboardsTool`, and `RetentionPoliciesTool` into `internal static ProjectToJson()` methods for unit testability
 - Use `StartsWith(char)` instead of `StartsWith(string)` in `QueryLogsTool` property filtering (CA1866/S6610)
+- `.github/workflows/release.yml`: inline validation of `next_version` manifest replaced by shared reusable workflow `Finfinder/AI_Instruction/.github/workflows/reusable-next-version-request.yml`; release job now waits for `next-version-request` job before publishing
 
 ### Added
 
