@@ -6,13 +6,10 @@ on:
   pull_request:
     branches: [main]
 
-permissions: {}
-
 jobs:
   version-consistency:
     permissions:
       contents: read
-      actions: read
     uses: Finfinder/AI_Instruction/.github/workflows/reusable-version-consistency.yml@main
     with:
       source-repository: ${{ github.repository }}
