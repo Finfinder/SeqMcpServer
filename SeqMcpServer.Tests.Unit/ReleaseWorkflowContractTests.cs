@@ -3,7 +3,7 @@ namespace SeqMcpServer.Tests.Unit;
 public class ReleaseWorkflowContractTests
 {
     [Fact]
-    public void ReleaseWorkflow_UsesSharedNextVersionRequestAdapter()
+    public void ReleaseWorkflow_UsesLocalReleaseAdapters()
     {
         var workflowPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../.github/workflows/release.yml"));
 
@@ -11,8 +11,8 @@ public class ReleaseWorkflowContractTests
 
         var workflowText = File.ReadAllText(workflowPath);
 
-        Assert.Contains("Finfinder/AI_Instruction/.github/workflows/reusable-version-consistency.yml@main", workflowText);
-        Assert.Contains("Finfinder/AI_Instruction/.github/workflows/reusable-next-version-request.yml@main", workflowText);
+        Assert.Contains("./.github/workflows/reusable-version-consistency.yml", workflowText);
+        Assert.Contains("./.github/workflows/reusable-next-version-request.yml", workflowText);
         Assert.Contains("source-repository: ${{ github.repository }}", workflowText);
         Assert.Contains("repository-ref: ${{ github.ref }}", workflowText);
         Assert.Contains("expected-release-version: ${{ github.ref_name }}", workflowText);
