@@ -5,6 +5,71 @@ namespace SeqMcpServer.Tests.Unit;
 
 public class HostConfigurationTests
 {
+    private static IDisposable OverrideEnvironmentVariables(string? seqUrl, string? seqApiKey)
+    {
+        return new EnvironmentVariableScope(
+            ("SEQ_URL", seqUrl),
+            ("SEQ_API_KEY", seqApiKey));
+    }
+
+    private sealed class EnvironmentVariableScope : IDisposable
+    {
+        private readonly (string Name, string? Value)[] _originalValues;
+
+        public EnvironmentVariableScope(params (string Name, string? Value)[] variables)
+        {
+            _originalValues = variables
+                .Select(variable => (variable.Name, Environment.GetEnvironmentVariable(variable.Name)))
+                .ToArray();
+
+            foreach (var variable in variables)
+            {
+                Environment.SetEnvironmentVariable(variable.Name, variable.Value);
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var originalValue in _originalValues)
+            {
+                Environment.SetEnvironmentVariable(originalValue.Name, originalValue.Value);
+            }
+        }
+    }
+
+    // ResolveConfiguration
+
+    [Fact]
+    public void ResolveConfiguration_WithoutEnvironmentVariables_ReturnsDefaultSeqUrl()
+    {
+        using var _ = OverrideEnvironmentVariables(null, null);
+
+        var configuration = HostConfiguration.ResolveConfiguration();
+
+        Assert.Equal("http://localhost:5341", configuration.SeqUrl);
+        Assert.Null(configuration.SeqApiKey);
+    }
+
+    [Fact]
+    public void ResolveConfiguration_WithSeqUrlEnvironmentVariable_ReturnsConfiguredSeqUrl()
+    {
+        using var _ = OverrideEnvironmentVariables("https://seq.example.com", null);
+
+        var configuration = HostConfiguration.ResolveConfiguration();
+
+        Assert.Equal("https://seq.example.com", configuration.SeqUrl);
+    }
+
+    [Fact]
+    public void ResolveConfiguration_WithSeqApiKeyEnvironmentVariable_ReturnsConfiguredSeqApiKey()
+    {
+        using var _ = OverrideEnvironmentVariables(null, "test-api-key");
+
+        var configuration = HostConfiguration.ResolveConfiguration();
+
+        Assert.Equal("test-api-key", configuration.SeqApiKey);
+    }
+
     // ValidateSeqUrl
 
     [Fact]
@@ -57,7 +122,7 @@ public class HostConfigurationTests
     {
         var services = new ServiceCollection();
 
-        HostConfiguration.ConfigureServices(services, "http://localhost:5341", null);
+        HostConfiguration.ConfigureServices(services, new SeqHostConfiguration("http://localhost:5341", null));
 
         var provider = services.BuildServiceProvider();
         var connection = provider.GetService<SeqConnection>();
@@ -69,7 +134,7 @@ public class HostConfigurationTests
     {
         var services = new ServiceCollection();
 
-        HostConfiguration.ConfigureServices(services, "http://localhost:5341", null);
+        HostConfiguration.ConfigureServices(services, new SeqHostConfiguration("http://localhost:5341", null));
 
         var provider = services.BuildServiceProvider();
         var first = provider.GetRequiredService<SeqConnection>();
@@ -84,7 +149,7 @@ public class HostConfigurationTests
     {
         var services = new ServiceCollection();
 
-        HostConfiguration.ConfigureServices(services, "http://test:5341", null);
+        HostConfiguration.ConfigureServices(services, new SeqHostConfiguration("http://test:5341", null));
 
         var provider = services.BuildServiceProvider();
         var factory = provider.GetRequiredService<IHttpClientFactory>();
@@ -97,7 +162,7 @@ public class HostConfigurationTests
     {
         var services = new ServiceCollection();
 
-        HostConfiguration.ConfigureServices(services, "http://localhost:5341", "my-key");
+        HostConfiguration.ConfigureServices(services, new SeqHostConfiguration("http://localhost:5341", "my-key"));
 
         var provider = services.BuildServiceProvider();
         var factory = provider.GetRequiredService<IHttpClientFactory>();
@@ -111,7 +176,7 @@ public class HostConfigurationTests
     {
         var services = new ServiceCollection();
 
-        HostConfiguration.ConfigureServices(services, "http://localhost:5341", null);
+        HostConfiguration.ConfigureServices(services, new SeqHostConfiguration("http://localhost:5341", null));
 
         var provider = services.BuildServiceProvider();
         var factory = provider.GetRequiredService<IHttpClientFactory>();

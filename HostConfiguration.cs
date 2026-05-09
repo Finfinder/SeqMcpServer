@@ -3,13 +3,15 @@ using Seq.Api;
 
 namespace SeqMcpServer;
 
+internal sealed record SeqHostConfiguration(string SeqUrl, string? SeqApiKey);
+
 internal static class HostConfiguration
 {
-    internal static (string seqUrl, string? seqApiKey) ResolveConfiguration()
+    internal static SeqHostConfiguration ResolveConfiguration()
     {
         var seqUrl = Environment.GetEnvironmentVariable("SEQ_URL") ?? "http://localhost:5341";
         var seqApiKey = Environment.GetEnvironmentVariable("SEQ_API_KEY");
-        return (seqUrl, seqApiKey);
+        return new SeqHostConfiguration(seqUrl, seqApiKey);
     }
 
     internal static void ValidateSeqUrl(string seqUrl)
@@ -18,15 +20,15 @@ internal static class HostConfiguration
             throw new InvalidOperationException($"Invalid SEQ_URL: '{seqUrl}'");
     }
 
-    internal static void ConfigureServices(IServiceCollection services, string seqUrl, string? seqApiKey)
+    internal static void ConfigureServices(IServiceCollection services, SeqHostConfiguration configuration)
     {
-        services.AddSingleton(sp => new SeqConnection(seqUrl, seqApiKey));
+        services.AddSingleton(sp => new SeqConnection(configuration.SeqUrl, configuration.SeqApiKey));
 
         services.AddHttpClient("Seq", client =>
         {
-            client.BaseAddress = new Uri(seqUrl);
-            if (!string.IsNullOrEmpty(seqApiKey))
-                client.DefaultRequestHeaders.Add("X-Seq-ApiKey", seqApiKey);
+            client.BaseAddress = new Uri(configuration.SeqUrl);
+            if (!string.IsNullOrEmpty(configuration.SeqApiKey))
+                client.DefaultRequestHeaders.Add("X-Seq-ApiKey", configuration.SeqApiKey);
         });
 
         services

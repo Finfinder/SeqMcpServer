@@ -9,13 +9,13 @@ builder.Logging.AddConsole(options =>
     options.LogToStandardErrorThreshold = LogLevel.Trace;
 });
 
-var (seqUrl, seqApiKey) = HostConfiguration.ResolveConfiguration();
-HostConfiguration.ValidateSeqUrl(seqUrl);
+var configuration = HostConfiguration.ResolveConfiguration();
+HostConfiguration.ValidateSeqUrl(configuration.SeqUrl);
 
-Console.Error.WriteLine(string.IsNullOrEmpty(seqApiKey)
+Console.Error.WriteLine(string.IsNullOrEmpty(configuration.SeqApiKey)
     ? $"WARNING: Seq MCP server v{VersionInfo.Current} \u2014 no SEQ_API_KEY configured, connecting without authentication"
     : $"Seq MCP server v{VersionInfo.Current} starting with API key authentication");
 
-HostConfiguration.ConfigureServices(builder.Services, seqUrl, seqApiKey);
+HostConfiguration.ConfigureServices(builder.Services, configuration);
 
 await builder.Build().RunAsync();
