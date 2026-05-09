@@ -32,11 +32,13 @@ public class ReleaseWorkflowContractTests
 
         Assert.Contains("./.github/workflows/reusable-version-consistency.yml", workflowText);
         Assert.Contains("./.github/workflows/reusable-next-version-request.yml", workflowText);
+        Assert.Contains("softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe", workflowText);
         Assert.Contains("source-repository: ${{ github.repository }}", workflowText);
         Assert.Contains("repository-ref: ${{ github.ref }}", workflowText);
         Assert.Contains("expected-release-version: ${{ github.ref_name }}", workflowText);
         Assert.Contains("next-version-request, build-self-contained, build-framework-dependent, pack-nuget", workflowText);
         Assert.DoesNotContain("Finfinder/AI_Instruction", workflowText);
+        Assert.DoesNotContain("softprops/action-gh-release@v2", workflowText);
         Assert.DoesNotContain("Validate next version request", workflowText);
     }
 
