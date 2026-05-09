@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - `CHANGELOG.md`: align the release automation history with the vendored local reusable workflows and scripts used by the 2.0.1 release line
 - Refactor `HostConfiguration.ResolveConfiguration()` to return an explicit `SeqHostConfiguration` record instead of a named tuple; `ConfigureServices()` now accepts the config object; `Program.cs` no longer deconstructs the result into loose scalar variables
+- `.github/workflows/version-consistency.yml`: remove `runs-on` from reusable-workflow caller job to fix "Unexpected value 'uses'" parse error in GitHub Actions
 
 ## [2.0.1] - 2026-05-09
 
