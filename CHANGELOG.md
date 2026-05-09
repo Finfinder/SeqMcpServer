@@ -9,9 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: extend release automation contract coverage to `open-next-version-branch.yml` and verify that vendored workflow/script assets remain present in the repository
+
+### Changed
+
+- `CHANGELOG.md`: align the release automation history with the vendored local reusable workflows and scripts used by the 2.0.1 release line
+
+## [2.0.1] - 2026-05-09
+
+### Added
+
 - `.github/workflows/open-next-version-branch.yml`: automated next-version branch creation triggered by successful Release workflow; updates `SeqMcpServer.csproj` (`<Version>`) and `README.md` with the `next_version` provided before the release
-- `.github/workflows/release.yml`: extended with validation and upload of `next-version-request` artifact for the central automation workflow in `AI_Instruction`
-- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: contract test asserting shared reusable workflows (`reusable-version-consistency`, `reusable-next-version-request`) are used in `release.yml` and the release job waits for `next-version-request`.
+- `.github/workflows/reusable-version-consistency.yml`, `.github/workflows/reusable-next-version-request.yml`, `.github/workflows/reusable-open-next-version-branch.yml` and `scripts/*.ps1`: vendored local release automation replacing the runtime dependency on `Finfinder/AI_Instruction`
+- `.github/workflows/release.yml`: extended with validation and upload of `next-version-request` artifact for the local release automation flow
+- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: contract tests asserting local reusable workflows are used in `release.yml` and the release job waits for `next-version-request`
 
 ### Changed
 
@@ -28,7 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Extract `SdkToolTestBase` abstract base class and `HttpClientFactoryHelper` to deduplicate error-handling test patterns across SDK and HTTP tool tests
 - Extract LINQ projection logic from `QueryLogsTool`, `SignalsTool`, `DashboardsTool`, and `RetentionPoliciesTool` into `internal static ProjectToJson()` methods for unit testability
 - Use `StartsWith(char)` instead of `StartsWith(string)` in `QueryLogsTool` property filtering (CA1866/S6610)
-- `.github/workflows/release.yml`: inline validation of `next_version` manifest replaced by shared reusable workflow `Finfinder/AI_Instruction/.github/workflows/reusable-next-version-request.yml`; release job now waits for `next-version-request` job before publishing
+- `.github/workflows/release.yml`: inline validation of `next_version` manifest replaced by local reusable workflow `./.github/workflows/reusable-next-version-request.yml`; release job now waits for `next-version-request` job before publishing
+- `.github/workflows/open-next-version-branch.yml`: cross-repository automation replaced by local reusable workflow `./.github/workflows/reusable-open-next-version-branch.yml`
+- `.github/workflows/version-consistency.yml`: validation delegated to local reusable workflow `./.github/workflows/reusable-version-consistency.yml`
 
 ### Added
 
