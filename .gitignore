@@ -16,6 +16,7 @@ SeqMcpServer.code-workspace
 !.github/workflows/
 !.github/versioning/
 !.github/release/
+!.github/actions-security/
 
 # .NET build and publish artifacts
 bin/
