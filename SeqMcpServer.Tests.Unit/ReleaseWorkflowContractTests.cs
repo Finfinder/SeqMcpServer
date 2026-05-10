@@ -66,4 +66,18 @@ public class ReleaseWorkflowContractTests
         AssertRepositoryFileExists("scripts/validate-next-version-request.ps1");
         AssertRepositoryFileExists("scripts/open-next-version-branch.ps1");
     }
+
+    [Fact]
+    public void ThirdPartyActionPinningWorkflow_UsesLocalPolicyBundle()
+    {
+        var wrapperText = ReadRepositoryFile(".github/workflows/third-party-action-pinning.yml");
+        var reusableText = ReadRepositoryFile(".github/workflows/reusable-third-party-action-pinning.yml");
+
+        Assert.Contains("./.github/workflows/reusable-third-party-action-pinning.yml", wrapperText);
+        Assert.Contains("Join-Path $repositoryRoot '.github/actions-security/zizmor.yml'", reusableText);
+        Assert.Contains("Policy source: repo-local mirror", reusableText);
+        Assert.DoesNotContain("automation-repository:", reusableText);
+        Assert.DoesNotContain("Join-Path $env:RUNNER_TEMP 'zizmor-third-party-action-pinning.yml'", reusableText);
+        AssertRepositoryFileExists(".github/actions-security/zizmor.yml");
+    }
 }
