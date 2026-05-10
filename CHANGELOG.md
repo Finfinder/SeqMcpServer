@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `.github/workflows/third-party-action-pinning.yml` and `.github/workflows/reusable-third-party-action-pinning.yml` — repo-local mirror of the monorepo SHA-pinning guard enforcing full 40-character SHA for third-party actions (stage 1)
+
 ### Security
 
 - `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: add regression contract assertions enforcing full 40-character commit SHA for `softprops/action-gh-release` and blocking reversion to mutable tag `@v2`
-
-### Added
 
 - `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: extend release automation contract coverage to `open-next-version-branch.yml` and verify that vendored workflow/script assets remain present in the repository
 
