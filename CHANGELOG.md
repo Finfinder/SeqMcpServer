@@ -24,9 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- GitHub Actions bumped to Node.js 24 runtime: `actions/checkout` v4→v5, `actions/setup-dotnet` v4→v5, `actions/setup-java` v4→v5 across `sonar.yml`, `validate-issue.yml`, `reusable-next-version-request.yml`, `reusable-open-next-version-branch.yml`, and `reusable-third-party-action-pinning.yml`
 - `CHANGELOG.md`: align the release automation history with the vendored local reusable workflows and scripts used by the 2.0.1 release line
 - Refactor `HostConfiguration.ResolveConfiguration()` to return an explicit `SeqHostConfiguration` record instead of a named tuple; `ConfigureServices()` now accepts the config object; `Program.cs` no longer deconstructs the result into loose scalar variables
 - `.github/workflows/version-consistency.yml`: remove `runs-on` from reusable-workflow caller job to fix "Unexpected value 'uses'" parse error in GitHub Actions
+
+### Security
+
+- `softprops/action-gh-release` in `release.yml` bumped from SHA `153bb8e...` (v2.6.1) to `b4309332981a82ec1c5618f44dd2e27cc8bfbfda` (v3.0.0)
+- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs` — updated SHA contract assertion to reflect `softprops/action-gh-release@v3.0.0` (`b4309332...`)
 
 ## [2.0.1] - 2026-05-09
 
