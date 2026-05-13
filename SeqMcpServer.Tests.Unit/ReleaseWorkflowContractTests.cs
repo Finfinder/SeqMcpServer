@@ -65,6 +65,7 @@ public class ReleaseWorkflowContractTests
         AssertRepositoryFileExists("scripts/validate-version-consistency.ps1");
         AssertRepositoryFileExists("scripts/validate-next-version-request.ps1");
         AssertRepositoryFileExists("scripts/open-next-version-branch.ps1");
+        AssertRepositoryFileExists("scripts/release-script-common.ps1");
     }
 
     [Fact]

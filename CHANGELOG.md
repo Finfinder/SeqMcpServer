@@ -10,17 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 
 - `.github/workflows/third-party-action-pinning.yml` and `.github/workflows/reusable-third-party-action-pinning.yml` — repo-local mirror of the monorepo SHA-pinning guard enforcing full 40-character SHA for third-party actions (stage 1)
+- `scripts/release-script-common.ps1` — shared PowerShell helpers (path canonicalization, JSON reading, semver normalization) extracted from release/versioning scripts; `next-version-manifest.ps1`, `validate-version-consistency.ps1`, and `open-next-version-branch.ps1` now dot-source this common helper to eliminate code duplication
 
 ### Changed
 
 - `.github/workflows/reusable-version-consistency.yml`, `reusable-next-version-request.yml`, `reusable-open-next-version-branch.yml` — synced to canonical mirror via centralized sync engine; removed cross-repo AI_Instruction checkout
 - `.github/workflows/reusable-third-party-action-pinning.yml` — synced to repo-local policy bundle; policy resolved from `.github/actions-security/zizmor.yml` instead of cross-repo checkout
-- `scripts/` (`next-version-manifest.ps1`, `open-next-version-branch.ps1`, `validate-next-version-request.ps1`, `validate-version-consistency.ps1`, `version-target-strategies.ps1`) — synced to canonical versions including UTF-8 without BOM writes
-- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs` — extended with `ThirdPartyActionPinningWorkflow_UsesLocalPolicyBundle` contract assertion
-
-- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: add regression contract assertions enforcing full 40-character commit SHA for `softprops/action-gh-release` and blocking reversion to mutable tag `@v2`
-
-- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs`: extend release automation contract coverage to `open-next-version-branch.yml` and verify that vendored workflow/script assets remain present in the repository
+- `scripts/` (`next-version-manifest.ps1`, `open-next-version-branch.ps1`, `validate-next-version-request.ps1`, `validate-version-consistency.ps1`, `version-target-strategies.ps1`) — synced to canonical versions including UTF-8 without BOM writes; `next-version-manifest.ps1`, `validate-version-consistency.ps1`, and `open-next-version-branch.ps1` refactored to dot-source `release-script-common.ps1` instead of maintaining local helper copies
+- `SeqMcpServer.Tests.Unit/ReleaseWorkflowContractTests.cs` — extended with `ThirdPartyActionPinningWorkflow_UsesLocalPolicyBundle` contract assertion; add regression contract assertions enforcing full 40-character commit SHA for `softprops/action-gh-release` and blocking reversion to mutable tag `@v2`; extend release automation contract coverage to `open-next-version-branch.yml` and `release-script-common.ps1`
 
 ### Changed
 
