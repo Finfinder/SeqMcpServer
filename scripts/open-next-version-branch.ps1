@@ -20,29 +20,9 @@ $ErrorActionPreference = 'Stop'
 
 $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
 
+. (Join-Path (Split-Path -Parent $PSCommandPath) 'release-script-common.ps1')
 . (Join-Path (Split-Path -Parent $PSCommandPath) 'version-target-strategies.ps1')
 . (Join-Path (Split-Path -Parent $PSCommandPath) 'next-version-manifest.ps1')
-
-function Get-RelativePath {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$BasePath,
-
-        [Parameter(Mandatory = $true)]
-        [string]$TargetPath
-    )
-
-    $normalizedBasePath = [System.IO.Path]::GetFullPath($BasePath)
-    if (-not $normalizedBasePath.EndsWith([System.IO.Path]::DirectorySeparatorChar)) {
-        $normalizedBasePath += [System.IO.Path]::DirectorySeparatorChar
-    }
-
-    $baseUri = New-Object System.Uri($normalizedBasePath)
-    $targetUri = New-Object System.Uri([System.IO.Path]::GetFullPath($TargetPath))
-    $relativePath = [System.Uri]::UnescapeDataString($baseUri.MakeRelativeUri($targetUri).ToString())
-
-    return $relativePath.Replace('/', [System.IO.Path]::DirectorySeparatorChar)
-}
 
 function Invoke-Git {
     param(
@@ -97,24 +77,6 @@ function Invoke-Git {
         ExitCode = $exitCode
         Output = @($output)
     }
-}
-
-function Read-JsonArray {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Path,
-
-        [Parameter(Mandatory = $true)]
-        [string]$Label
-    )
-
-    $parsedValue = Read-JsonObject -Path $Path -Label $Label
-    if ($null -eq $parsedValue) {
-        Write-Output -NoEnumerate -InputObject @()
-        return
-    }
-
-    Write-Output -NoEnumerate -InputObject @($parsedValue)
 }
 
 function Update-TargetFile {
