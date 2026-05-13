@@ -18,22 +18,22 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Parse as Bug Report
         id: bug-parser
-        uses: stefanbuck/github-issue-parser@10dcc54158ba4c137713d9d69d70a2da63b6bda3 # v3.2.3
+        uses: stefanbuck/github-issue-parser@cb6e97157cbf851e3a393ff8d57c93a484cc323f # v3.2.5
         with:
           template-path: .github/ISSUE_TEMPLATE/bug-report.yml
 
       - name: Parse as Feature Request
         id: feature-parser
-        uses: stefanbuck/github-issue-parser@10dcc54158ba4c137713d9d69d70a2da63b6bda3 # v3.2.3
+        uses: stefanbuck/github-issue-parser@cb6e97157cbf851e3a393ff8d57c93a484cc323f # v3.2.5
         with:
           template-path: .github/ISSUE_TEMPLATE/feature-request.yml
 
       - name: Validate template
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           BUG_REPORT_JSON: ${{ steps.bug-parser.outputs.jsonString }}
           FEATURE_REQUEST_JSON: ${{ steps.feature-parser.outputs.jsonString }}

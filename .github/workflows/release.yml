@@ -33,10 +33,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
 
@@ -59,10 +59,10 @@ jobs:
         rid: [win-x64, linux-x64, osx-x64, osx-arm64]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
 
@@ -92,7 +92,7 @@ jobs:
           tar -czf ../SeqMcpServer-${{ matrix.rid }}.tar.gz .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: SeqMcpServer-${{ matrix.rid }}
           path: |
@@ -107,10 +107,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
 
@@ -126,7 +126,7 @@ jobs:
           zip -r ../SeqMcpServer-portable.zip .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: SeqMcpServer-portable
           path: SeqMcpServer-portable.zip
@@ -139,10 +139,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
 
@@ -153,7 +153,7 @@ jobs:
         run: dotnet pack SeqMcpServer.csproj -c Release --no-restore -o ./nupkg
 
       - name: Upload NuGet package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: nuget-package
           path: ./nupkg/*.nupkg
@@ -166,10 +166,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: ./artifacts
 
@@ -202,7 +202,7 @@ jobs:
           cat release_notes.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         with:
           files: |
             release/*.zip

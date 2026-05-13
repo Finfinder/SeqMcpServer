@@ -32,7 +32,7 @@ public class ReleaseWorkflowContractTests
 
         Assert.Contains("./.github/workflows/reusable-version-consistency.yml", workflowText);
         Assert.Contains("./.github/workflows/reusable-next-version-request.yml", workflowText);
-        Assert.Contains("softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe", workflowText);
+        Assert.Contains("softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda", workflowText);
         Assert.Contains("source-repository: ${{ github.repository }}", workflowText);
         Assert.Contains("repository-ref: ${{ github.ref }}", workflowText);
         Assert.Contains("expected-release-version: ${{ github.ref_name }}", workflowText);
