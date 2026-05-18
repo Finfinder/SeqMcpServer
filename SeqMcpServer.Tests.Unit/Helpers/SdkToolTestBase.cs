@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Seq.Api;
 
 namespace SeqMcpServer.Tests.Unit.Helpers;
@@ -14,13 +13,11 @@ public abstract class SdkToolTestBase
     {
         using var connection = new SeqConnection("http://localhost");
         using var cts = new CancellationTokenSource();
-        cts.Cancel();
+        await cts.CancelAsync();
 
         var result = await InvokeTool(connection, cts.Token);
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains(ExpectedErrorSubstring, error);
+        ToolAssertions.AssertJsonError(result, ExpectedErrorSubstring);
     }
 
     [Fact]
@@ -31,8 +28,6 @@ public abstract class SdkToolTestBase
 
         var result = await InvokeTool(connection);
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains(ExpectedErrorSubstring, error);
+        ToolAssertions.AssertJsonError(result, ExpectedErrorSubstring);
     }
 }

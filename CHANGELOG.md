@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- `SeqMcpServer.Tests.Unit/Helpers/ToolAssertions.cs` — extract `AssertJsonError(string result, string expectedSubstring)` helper centralizing JSON error assertions; used in `SdkToolTestBase`, `DiagnosticsToolTests`, `QueryLogsToolTests`, and `SqlQueryToolTests` to eliminate repeated `JsonDocument.Parse` / `GetProperty("Error")` boilerplate
 - `.github/workflows/reusable-version-consistency.yml`, `reusable-next-version-request.yml`, `reusable-open-next-version-branch.yml` — synced to canonical mirror via centralized sync engine; removed cross-repo AI_Instruction checkout
 - `.github/workflows/reusable-third-party-action-pinning.yml` — synced to repo-local policy bundle; policy resolved from `.github/actions-security/zizmor.yml` instead of cross-repo checkout
 - `scripts/` (`next-version-manifest.ps1`, `open-next-version-branch.ps1`, `validate-next-version-request.ps1`, `validate-version-consistency.ps1`, `version-target-strategies.ps1`) — synced to canonical versions including UTF-8 without BOM writes; `next-version-manifest.ps1`, `validate-version-consistency.ps1`, and `open-next-version-branch.ps1` refactored to dot-source `release-script-common.ps1` instead of maintaining local helper copies

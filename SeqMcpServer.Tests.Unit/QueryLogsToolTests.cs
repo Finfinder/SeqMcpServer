@@ -21,9 +21,7 @@ public class QueryLogsToolTests : SdkToolTestBase
 
         var result = await QueryLogsTool.QueryLogs(connection, fromUtc: "not-a-date");
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to query Seq events:", error);
+        var error = ToolAssertions.AssertJsonError(result, "Failed to query Seq events:");
         Assert.Contains("fromUtc", error);
     }
 
@@ -34,9 +32,7 @@ public class QueryLogsToolTests : SdkToolTestBase
 
         var result = await QueryLogsTool.QueryLogs(connection, toUtc: "not-a-date");
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to query Seq events:", error);
+        var error = ToolAssertions.AssertJsonError(result, "Failed to query Seq events:");
         Assert.Contains("toUtc", error);
     }
 
@@ -207,13 +203,14 @@ public class QueryLogsToolTests : SdkToolTestBase
     [InlineData(-100)]
     public async Task QueryLogs_CountBelowMinimum_DoesNotThrowArgumentError(int count)
     {
+        Assert.True(count < 1);
+
         using var connection = new SeqConnection("http://localhost");
 
         var result = await QueryLogsTool.QueryLogs(connection, count: count);
 
-        using var doc = JsonDocument.Parse(result);
-        Assert.True(doc.RootElement.TryGetProperty("Error", out var error));
-        Assert.DoesNotContain("ArgumentOutOfRange", error.GetString());
+        var error = ToolAssertions.AssertJsonError(result, "Failed to query Seq events:");
+        Assert.DoesNotContain("ArgumentOutOfRange", error);
     }
 
     [Theory]
@@ -221,13 +218,14 @@ public class QueryLogsToolTests : SdkToolTestBase
     [InlineData(9999)]
     public async Task QueryLogs_CountAboveMaximum_DoesNotThrowArgumentError(int count)
     {
+        Assert.True(count > 500);
+
         using var connection = new SeqConnection("http://localhost");
 
         var result = await QueryLogsTool.QueryLogs(connection, count: count);
 
-        using var doc = JsonDocument.Parse(result);
-        Assert.True(doc.RootElement.TryGetProperty("Error", out var error));
-        Assert.DoesNotContain("ArgumentOutOfRange", error.GetString());
+        var error = ToolAssertions.AssertJsonError(result, "Failed to query Seq events:");
+        Assert.DoesNotContain("ArgumentOutOfRange", error);
     }
 
     [Theory]
@@ -236,12 +234,13 @@ public class QueryLogsToolTests : SdkToolTestBase
     [InlineData(500)]
     public async Task QueryLogs_CountAtBoundary_DoesNotThrowArgumentError(int count)
     {
+        Assert.InRange(count, 1, 500);
+
         using var connection = new SeqConnection("http://localhost");
 
         var result = await QueryLogsTool.QueryLogs(connection, count: count);
 
-        using var doc = JsonDocument.Parse(result);
-        Assert.True(doc.RootElement.TryGetProperty("Error", out var error));
-        Assert.DoesNotContain("ArgumentOutOfRange", error.GetString());
+        var error = ToolAssertions.AssertJsonError(result, "Failed to query Seq events:");
+        Assert.DoesNotContain("ArgumentOutOfRange", error);
     }
 }

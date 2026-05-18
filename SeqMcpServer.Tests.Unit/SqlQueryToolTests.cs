@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Seq.Api;
 using SeqMcpServer.Tests.Unit.Helpers;
 using SeqMcpServer.Tools;
@@ -24,8 +23,7 @@ public class SqlQueryToolTests : SdkToolTestBase
 
         var result = await SqlQueryTool.RunSql(connection, query);
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
+        var error = ToolAssertions.AssertJsonError(result, "Query cannot be empty.");
         Assert.Equal("Query cannot be empty.", error);
     }
 
@@ -36,9 +34,7 @@ public class SqlQueryToolTests : SdkToolTestBase
 
         var result = await SqlQueryTool.RunSql(connection, "select 1", fromUtc: "not-a-date");
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to execute Seq SQL query:", error);
+        var error = ToolAssertions.AssertJsonError(result, "Failed to execute Seq SQL query:");
         Assert.Contains("fromUtc", error);
     }
 
@@ -49,9 +45,7 @@ public class SqlQueryToolTests : SdkToolTestBase
 
         var result = await SqlQueryTool.RunSql(connection, "select 1", toUtc: "not-a-date");
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to execute Seq SQL query:", error);
+        var error = ToolAssertions.AssertJsonError(result, "Failed to execute Seq SQL query:");
         Assert.Contains("toUtc", error);
     }
 
@@ -102,8 +96,7 @@ public class SqlQueryToolTests : SdkToolTestBase
 
         var result = await SqlQueryTool.RunSql(connection, "select 1", fromUtc: "bad-from", toUtc: "bad-to");
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
+        var error = ToolAssertions.AssertJsonError(result, "Failed to execute Seq SQL query:");
         Assert.Contains("fromUtc", error);
         Assert.Contains("bad-from", error);
     }
