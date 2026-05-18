@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using NSubstitute;
 using SeqMcpServer.Tests.Unit.Helpers;
 using SeqMcpServer.Tools;
@@ -26,9 +25,7 @@ public class DiagnosticsToolTests
 
         var result = await DiagnosticsTool.GetDiagnostics(factory);
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to get Seq diagnostics:", error);
+        ToolAssertions.AssertJsonError(result, "Failed to get Seq diagnostics:");
     }
 
     [Fact]
@@ -41,8 +38,6 @@ public class DiagnosticsToolTests
 
         var result = await DiagnosticsTool.GetDiagnostics(factory);
 
-        using var doc = JsonDocument.Parse(result);
-        var error = doc.RootElement.GetProperty("Error").GetString();
-        Assert.Contains("Failed to get Seq diagnostics:", error);
+        ToolAssertions.AssertJsonError(result, "Failed to get Seq diagnostics:");
     }
 }
