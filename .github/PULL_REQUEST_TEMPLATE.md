@@ -4,7 +4,7 @@
 
 ## Related issue
 
-<!-- Link the related issue: Closes #... or Related to #... -->
+<!-- Link the related issue: Refs #..., Fixes #..., or Closes #.... For PRs targeting version branches, prefer Refs #... unless the PR fully closes the issue on that branch. -->
 
 ## Type of change
 
