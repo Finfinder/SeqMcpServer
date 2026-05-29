@@ -37,6 +37,9 @@ TestResults/
 *.trx
 *.log
 
+# Editor / IDE caches
+*.lscache
+
 # NuGet package artifacts
 *.nupkg
 *.snupkg
