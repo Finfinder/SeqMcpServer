@@ -9,6 +9,12 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that connects AI agents to [Seq](https://datalust.co/seq) — a centralized structured logging platform. This server enables LLMs to search log events, execute SQL queries, inspect dashboards, alerts, signals, and more through natural language interactions.
 
+## Feedback, Issues, and Contributing
+
+- Report bugs and feature ideas through GitHub Issues: https://github.com/Finfinder/SeqMcpServer/issues
+- Larger goals are tracked with milestones and the pinned roadmap issue.
+- Collaboration notes live in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ---
 
 ## Use Cases

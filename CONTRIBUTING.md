@@ -22,6 +22,14 @@ When contributing, keep the following security guidelines in mind:
 - **Validate all user inputs** (MCP tool parameters) — use input clamping (`Math.Clamp`) and enforce query limits (e.g., automatic `LIMIT` for SQL) to protect against injection and excessive load on Seq
 - **Transparent proxy design** — SQL queries and filter expressions are forwarded to the Seq API without server-side sanitization. Seq handles parsing, validation, and authorization. When adding new tools that pass user input to Seq, document this pattern with a `// Security:` comment above the API call
 
+## Issues, Roadmap, and Linking
+
+- Report bugs and feature requests through GitHub Issues: https://github.com/Finfinder/SeqMcpServer/issues
+- Larger goals are tracked with milestones and the pinned `Project Status / Roadmap` issue.
+- Link related work in commits and pull requests with `Refs #123`, `Fixes #123`, or `Closes #123`.
+- For pull requests targeting version branches, prefer `Refs #123` unless the branch change is intended to fully close the issue there.
+- Keep commit subjects aligned with this repository's existing conventions and instructions instead of forcing a global commit style.
+
 ---
 
 ## Getting Started
