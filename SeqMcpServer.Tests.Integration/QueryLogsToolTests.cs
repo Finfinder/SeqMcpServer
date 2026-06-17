@@ -83,4 +83,20 @@ public class QueryLogsToolTests
         Assert.NotEqual(JsonValueKind.Undefined, doc.ValueKind);
         ToolAssertions.AssertNoToolError(result);
     }
+
+    [Fact]
+    public async Task QueryLogs_TraceTrue_ReturnsEventsWithoutError()
+    {
+        var result = await QueryLogsTool.QueryLogs(
+            _fixture.Connection,
+            count: 10,
+            fromUtc: "2025-01-15T00:00:00Z",
+            toUtc: "2025-01-16T00:00:00Z",
+            trace: true);
+
+        var events = JsonSerializer.Deserialize<JsonElement>(result);
+        Assert.Equal(JsonValueKind.Array, events.ValueKind);
+        Assert.True(events.GetArrayLength() > 0);
+        ToolAssertions.AssertNoToolError(result);
+    }
 }
