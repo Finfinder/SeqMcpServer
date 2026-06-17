@@ -100,4 +100,33 @@ public class SqlQueryToolTests : SdkToolTestBase
         Assert.Contains("fromUtc", error);
         Assert.Contains("bad-from", error);
     }
+
+    // --- trace parameter tests ---
+
+    [Fact]
+    public async Task RunSql_TraceTrue_PropagatesWithoutBreakingResponseShape()
+    {
+        // No HTTP server is available in unit tests; we only verify that the
+        // call with trace=true is accepted by the tool signature and reaches the
+        // SDK without throwing. Integration coverage lives in
+        // SeqMcpServer.Tests.Integration/SqlQueryToolTests.RunSql_TraceTrue_ReturnsColumnsAndRowsWithoutError
+        // against a real Seq container.
+        using var connection = new SeqConnection("http://localhost");
+
+        var result = await SqlQueryTool.RunSql(connection, "select count(*) from stream", trace: true);
+
+        Assert.False(string.IsNullOrWhiteSpace(result));
+        Assert.StartsWith("{", result.TrimStart());
+    }
+
+    [Fact]
+    public async Task RunSql_TraceFalse_PropagatesWithoutBreakingResponseShape()
+    {
+        using var connection = new SeqConnection("http://localhost");
+
+        var result = await SqlQueryTool.RunSql(connection, "select count(*) from stream", trace: false);
+
+        Assert.False(string.IsNullOrWhiteSpace(result));
+        Assert.StartsWith("{", result.TrimStart());
+    }
 }

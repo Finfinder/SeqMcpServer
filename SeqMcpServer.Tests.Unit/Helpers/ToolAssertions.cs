@@ -18,4 +18,12 @@ internal static class ToolAssertions
 
         return error!;
     }
+
+    internal static void AssertNoToolError(string json)
+    {
+        var doc = JsonSerializer.Deserialize<JsonElement>(json);
+        Assert.False(
+            doc.ValueKind == JsonValueKind.Object && doc.TryGetProperty("Error", out _),
+            "Expected no Error in response");
+    }
 }

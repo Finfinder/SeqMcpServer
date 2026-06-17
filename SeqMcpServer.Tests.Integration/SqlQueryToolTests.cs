@@ -74,4 +74,22 @@ public class SqlQueryToolTests
         Assert.NotEqual(JsonValueKind.Undefined, doc.ValueKind);
         ToolAssertions.AssertNoToolError(result);
     }
+
+    [Fact]
+    public async Task RunSql_TraceTrue_ReturnsColumnsAndRowsWithoutError()
+    {
+        var result = await SqlQueryTool.RunSql(
+            _fixture.Connection,
+            query: "select count(*) from stream",
+            fromUtc: "2025-01-15T00:00:00Z",
+            toUtc: "2025-01-16T00:00:00Z",
+            trace: true);
+
+        var doc = JsonSerializer.Deserialize<JsonElement>(result);
+        Assert.True(doc.TryGetProperty("Columns", out var columns));
+        Assert.True(doc.TryGetProperty("Rows", out var rows));
+        Assert.True(columns.GetArrayLength() > 0);
+        Assert.True(rows.GetArrayLength() > 0);
+        ToolAssertions.AssertNoToolError(result);
+    }
 }

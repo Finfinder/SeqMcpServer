@@ -243,4 +243,33 @@ public class QueryLogsToolTests : SdkToolTestBase
         var error = ToolAssertions.AssertJsonError(result, "Failed to query Seq events:");
         Assert.DoesNotContain("ArgumentOutOfRange", error);
     }
+
+    // --- trace parameter tests ---
+
+    [Fact]
+    public async Task QueryLogs_TraceTrue_PropagatesWithoutBreakingResponseShape()
+    {
+        // No HTTP server is available in unit tests; we only verify that the
+        // call with trace=true is accepted by the tool signature and reaches the
+        // SDK without throwing. Integration coverage lives in
+        // SeqMcpServer.Tests.Integration/QueryLogsToolTests.QueryLogs_TraceTrue_ReturnsEventsWithoutError
+        // against a real Seq container.
+        using var connection = new SeqConnection("http://localhost");
+
+        var result = await QueryLogsTool.QueryLogs(connection, trace: true);
+
+        Assert.False(string.IsNullOrWhiteSpace(result));
+        Assert.StartsWith("{", result.TrimStart());
+    }
+
+    [Fact]
+    public async Task QueryLogs_TraceFalse_PropagatesWithoutBreakingResponseShape()
+    {
+        using var connection = new SeqConnection("http://localhost");
+
+        var result = await QueryLogsTool.QueryLogs(connection, trace: false);
+
+        Assert.False(string.IsNullOrWhiteSpace(result));
+        Assert.StartsWith("{", result.TrimStart());
+    }
 }

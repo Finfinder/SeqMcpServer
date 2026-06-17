@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `seq_query_logs` and `seq_run_sql` MCP tools — optional `trace` parameter (defaults to `false`) that enables Seq server-side query tracing via `Seq.Api 2025.2.2`. The flag is forwarded to `EventsResourceGroup.ListAsync` and `DataResourceGroup.QueryAsync`; the response format is unchanged.
 - `.github/workflows/third-party-action-pinning.yml` and `.github/workflows/reusable-third-party-action-pinning.yml` — repo-local mirror of the monorepo SHA-pinning guard enforcing full 40-character SHA for third-party actions (stage 1)
 - `scripts/release-script-common.ps1` — shared PowerShell helpers (path canonicalization, JSON reading, semver normalization) extracted from release/versioning scripts; `next-version-manifest.ps1`, `validate-version-consistency.ps1`, and `open-next-version-branch.ps1` now dot-source this common helper to eliminate code duplication
 
