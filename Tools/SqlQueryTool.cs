@@ -15,6 +15,7 @@ public static class SqlQueryTool
         [Description("SQL query to execute against Seq event stream")] string query,
         [Description("ISO 8601 range start. Defaults to last 24h.")] string? fromUtc = null,
         [Description("ISO 8601 range end. Defaults to now.")] string? toUtc = null,
+        [Description("Enable Seq server-side query tracing. Defaults to false.")] bool trace = false,
         CancellationToken cancellationToken = default)
     {
         try
@@ -33,7 +34,7 @@ public static class SqlQueryTool
             // Security: the SQL query is passed to Seq API without server-side sanitization (transparent proxy by design).
             // Seq SQL is a read-only query language (SELECT and aggregations only — no DML operations exist).
             // Authorization and query restrictions are enforced by the Seq server based on the API key permissions.
-            var result = await connection.Data.QueryAsync(query, rangeStartUtc: from, rangeEndUtc: to);
+            var result = await connection.Data.QueryAsync(query, rangeStartUtc: from, rangeEndUtc: to, trace: trace);
 
             var output = new { result.Columns, result.Rows };
             return JsonSerializer.Serialize(output, JsonDefaults.Indented);

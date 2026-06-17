@@ -15,6 +15,7 @@ public static class QueryLogsTool
         [Description("Maximum number of events to return (1-500)")] int count = 50,
         [Description("ISO 8601 start time, e.g. '2025-01-15T00:00:00Z'. Defaults to last 24 hours.")] string? fromUtc = null,
         [Description("ISO 8601 end time. Defaults to now.")] string? toUtc = null,
+        [Description("Enable Seq server-side query tracing. Defaults to false.")] bool trace = false,
         CancellationToken cancellationToken = default)
     {
         try
@@ -33,7 +34,8 @@ public static class QueryLogsTool
                 count: count,
                 render: true,
                 fromDateUtc: from,
-                toDateUtc: to);
+                toDateUtc: to,
+                trace: trace);
 
             // EventEntity.Properties is List<EventPropertyPart> with .Name / .Value
             // EventEntity.Timestamp is string (ISO-8601), Level is string

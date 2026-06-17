@@ -220,6 +220,7 @@ Search Seq log events using a filter expression. Returns matching events with ti
 | `count` | `int` | No | `50` | Maximum number of events to return (1–500) |
 | `fromUtc` | `string` | No | Last 24 hours | ISO 8601 start time (e.g., `2025-01-15T00:00:00Z`) |
 | `toUtc` | `string` | No | Now | ISO 8601 end time |
+| `trace` | `bool` | No | `false` | Enable Seq server-side query tracing. Does not change the response format. |
 
 **Example prompts:**
 - *"Show me the last 10 error logs"*
@@ -239,6 +240,7 @@ Execute a SQL query against Seq log data using standard Seq SQL syntax.
 | `query` | `string` | **Yes** | — | SQL query to execute (e.g., `select count(*) from stream group by @Level`) |
 | `fromUtc` | `string` | No | Last 24 hours | ISO 8601 range start |
 | `toUtc` | `string` | No | Now | ISO 8601 range end |
+| `trace` | `bool` | No | `false` | Enable Seq server-side query tracing. Does not change the response format. |
 
 > **Safety:** A `LIMIT 1000` clause is automatically appended if no limit is specified to prevent excessive data retrieval.
 
