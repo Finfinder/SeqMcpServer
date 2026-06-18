@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Added
+### Changed
+
+- `scripts/seed-github-issues.ps1`, `scripts/sync-github-meta.ps1` — extract common GitHub CLI helper functions (`Write-Log`, `Invoke-GhText`, `Invoke-GhJson`, `Invoke-GhReadyCheck`, `Resolve-PathFromRepoRoot`, `Get-NormalizedSourceIds`, `Get-SourceIdKey`, `Get-SourceIdsFromBody`) into shared `scripts/GitHub-Common.ps1` to reduce code duplication reported by SonarCloud (9.7% and 14.6% respectively)
 
 - `seq_query_logs` and `seq_run_sql` MCP tools — optional `trace` parameter (defaults to `false`) that enables Seq server-side query tracing via `Seq.Api 2025.2.2`. The flag is forwarded to `EventsResourceGroup.ListAsync` and `DataResourceGroup.QueryAsync`; the response format is unchanged.
 - `.github/workflows/third-party-action-pinning.yml` and `.github/workflows/reusable-third-party-action-pinning.yml` — repo-local mirror of the monorepo SHA-pinning guard enforcing full 40-character SHA for third-party actions (stage 1)

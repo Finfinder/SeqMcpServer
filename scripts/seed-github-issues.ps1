@@ -5,64 +5,11 @@ param(
     [string]$Repo
 )
 
+. "$PSScriptRoot/GitHub-Common.ps1"
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $mode = if ($Apply) { 'apply' } else { 'dry-run' }
 $sourceIdPattern = 'SEQ-\d+'
-
-function Write-Log {
-    param([string]$Message)
-
-    Write-Host "[seed-github-issues] $Message"
-}
-
-function Invoke-GhText {
-    param([string[]]$Arguments)
-
-    $output = & gh @Arguments 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        $rendered = ($output | ForEach-Object { $_.ToString() }) -join [Environment]::NewLine
-        throw "gh command failed: gh $($Arguments -join ' ')$([Environment]::NewLine)$rendered"
-    }
-
-    return (($output | ForEach-Object { $_.ToString() }) -join [Environment]::NewLine).Trim()
-}
-
-function Invoke-GhJson {
-    param([string[]]$Arguments)
-
-    $text = Invoke-GhText -Arguments $Arguments
-    if ([string]::IsNullOrWhiteSpace($text)) {
-        return $null
-    }
-
-    return $text | ConvertFrom-Json -Depth 100
-}
-
-function Invoke-GhReadyCheck {
-    if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
-        throw "GitHub CLI ('gh') was not found in PATH."
-    }
-
-    & gh --version *> $null
-    if ($LASTEXITCODE -ne 0) {
-        throw "GitHub CLI ('gh') could not be started."
-    }
-
-    & gh auth status *> $null
-    if ($LASTEXITCODE -ne 0) {
-        throw "GitHub CLI is not authenticated. Run 'gh auth login' first."
-    }
-}
-
-function Resolve-PathFromRepoRoot {
-    param([string]$Path)
-
-    if ([System.IO.Path]::IsPathRooted($Path)) {
-        return $Path
-    }
-
-    return Join-Path $repoRoot $Path
-}
 
 function Get-RepoConfig {
     $configPath = Join-Path $repoRoot '.github/gh-sync.json'
@@ -82,23 +29,6 @@ function Get-RepoConfig {
     }
 
     return $config
-}
-
-function Get-NormalizedSourceIds {
-    param([string[]]$SourceIds)
-
-    return @(
-        $SourceIds |
-            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
-            ForEach-Object { ([string]$_).Trim().ToUpperInvariant() } |
-            Sort-Object -Unique
-    )
-}
-
-function Get-SourceIdKey {
-    param([string[]]$SourceIds)
-
-    return (Get-NormalizedSourceIds -SourceIds $SourceIds) -join '|'
 }
 
 function Get-ConfiguredMilestoneTitles {
@@ -121,26 +51,6 @@ function Get-ConfiguredMilestoneTitles {
     }
 
     return @($titles | Sort-Object)
-}
-
-function Get-SourceIdsFromBody {
-    param([AllowNull()][string]$Body)
-
-    if ([string]::IsNullOrWhiteSpace($Body)) {
-        return @()
-    }
-
-    $match = [regex]::Match($Body, '(?im)^\s*Original backlog IDs:\s*(?<ids>.+?)\s*$')
-    if (-not $match.Success) {
-        return @()
-    }
-
-    $matches = [regex]::Matches($match.Groups['ids'].Value, $sourceIdPattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
-    if (-not $matches -or $matches.Count -eq 0) {
-        return @()
-    }
-
-    return Get-NormalizedSourceIds -SourceIds @($matches | ForEach-Object { $_.Value })
 }
 
 function Get-IssueSeed {
@@ -334,8 +244,8 @@ $allowedMilestones = Get-ConfiguredMilestoneTitles -RepoConfig $repoConfig
 $seed = Get-IssueSeed -Path $SeedPath -AllowedLabels $allowedLabels -AllowedMilestones $allowedMilestones
 $repoSlug = if ([string]::IsNullOrWhiteSpace($Repo)) { [string]$repoConfig.repo.slug } else { $Repo }
 
-Write-Log "Using seed '$($seed.Path)'"
-Write-Log "Target repo '$repoSlug'"
+Write-Log -Prefix '[seed-github-issues]' "Using seed '$($seed.Path)'"
+Write-Log -Prefix '[seed-github-issues]' "Target repo '$repoSlug'"
 
 Invoke-GhReadyCheck
 
@@ -399,17 +309,17 @@ foreach ($issue in $seed.Data.issues) {
 
         if ($hasNoChanges) {
             if ($Apply) {
-                Write-Log "Skipped issue #$existingNumber via ${matchReason}: no changes for '$title'"
+                Write-Log -Prefix '[seed-github-issues]' "Skipped issue #$existingNumber via ${matchReason}: no changes for '$title'"
             }
             else {
-                    Write-Log "DRY-RUN: no changes for #$existingNumber via ${matchReason}: '$title'"
+                    Write-Log -Prefix '[seed-github-issues]' "DRY-RUN: no changes for #$existingNumber via ${matchReason}: '$title'"
             }
 
             continue
         }
 
         if (-not $Apply) {
-            Write-Log "DRY-RUN: would update #$existingNumber via $matchReason to '$title' [milestone: $milestone] [add labels: $(Format-List -Items $labelsToAdd)] [remove labels: $(Format-List -Items $labelsToRemove)] [sourceIds: $(Format-List -Items $sourceIds)]"
+            Write-Log -Prefix '[seed-github-issues]' "DRY-RUN: would update #$existingNumber via $matchReason to '$title' [milestone: $milestone] [add labels: $(Format-List -Items $labelsToAdd)] [remove labels: $(Format-List -Items $labelsToRemove)] [sourceIds: $(Format-List -Items $sourceIds)]"
             continue
         }
 
@@ -425,12 +335,12 @@ foreach ($issue in $seed.Data.issues) {
         $previousSourceIds = Get-SourceIdsFromBody -Body ([string]$matchedIssue.body)
         Invoke-GhText -Arguments $arguments | Out-Null
         Set-IssueInMaps -Maps $existingIssues -Number ([int]$matchedIssue.number) -Title $title -Body $body -Milestone $milestone -Labels $labels -PreviousTitle $previousTitle -PreviousSourceIds $previousSourceIds
-        Write-Log "Updated issue #$existingNumber via ${matchReason}: '$title'"
+        Write-Log -Prefix '[seed-github-issues]' "Updated issue #$existingNumber via ${matchReason}: '$title'"
         continue
     }
 
     if (-not $Apply) {
-        Write-Log "DRY-RUN: would create '$title' [milestone: $milestone] [labels: $(Format-List -Items $labels)] [sourceIds: $(Format-List -Items $sourceIds)]"
+        Write-Log -Prefix '[seed-github-issues]' "DRY-RUN: would create '$title' [milestone: $milestone] [labels: $(Format-List -Items $labels)] [sourceIds: $(Format-List -Items $sourceIds)]"
         continue
     }
 
@@ -444,10 +354,10 @@ foreach ($issue in $seed.Data.issues) {
         Set-IssueInMaps -Maps $existingIssues -Number ([int]$Matches.number) -Title $title -Body $body -Milestone $milestone -Labels $labels -PreviousTitle '' -PreviousSourceIds @()
     }
 
-    Write-Log "Created issue '$title'"
+    Write-Log -Prefix '[seed-github-issues]' "Created issue '$title'"
 }
 
-Write-Log "Completed in $mode mode."
+Write-Log -Prefix '[seed-github-issues]' "Completed in $mode mode."
 if (-not $Apply) {
-    Write-Log 'Use -Apply to create or update issues after milestones are synced.'
+    Write-Log -Prefix '[seed-github-issues]' 'Use -Apply to create or update issues after milestones are synced.'
 }

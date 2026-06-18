@@ -4,53 +4,10 @@ param(
     [string]$ConfigPath = (Join-Path (Split-Path -Parent $PSScriptRoot) '.github/gh-sync.json')
 )
 
+. "$PSScriptRoot/GitHub-Common.ps1"
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $mode = if ($Apply) { 'apply' } else { 'dry-run' }
-
-function Write-Log {
-    param([string]$Message)
-
-    Write-Host "[sync-github-meta] $Message"
-}
-
-function Invoke-GhText {
-    param([string[]]$Arguments)
-
-    $output = & gh @Arguments 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        $rendered = ($output | ForEach-Object { $_.ToString() }) -join [Environment]::NewLine
-        throw "gh command failed: gh $($Arguments -join ' ')$([Environment]::NewLine)$rendered"
-    }
-
-    return (($output | ForEach-Object { $_.ToString() }) -join [Environment]::NewLine).Trim()
-}
-
-function Invoke-GhJson {
-    param([string[]]$Arguments)
-
-    $text = Invoke-GhText -Arguments $Arguments
-    if ([string]::IsNullOrWhiteSpace($text)) {
-        return $null
-    }
-
-    return $text | ConvertFrom-Json -Depth 100
-}
-
-function Invoke-GhReadyCheck {
-    if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
-        throw "GitHub CLI ('gh') was not found in PATH."
-    }
-
-    & gh --version *> $null
-    if ($LASTEXITCODE -ne 0) {
-        throw "GitHub CLI ('gh') could not be started."
-    }
-
-    & gh auth status *> $null
-    if ($LASTEXITCODE -ne 0) {
-        throw "GitHub CLI is not authenticated. Run 'gh auth login' first."
-    }
-}
 
 function Invoke-Step {
     param(
@@ -59,12 +16,12 @@ function Invoke-Step {
     )
 
     if ($Apply) {
-        Write-Log "APPLY: $Message"
+        Write-Log -Prefix '[sync-github-meta]' "APPLY: $Message"
         & $Action
         return
     }
 
-    Write-Log "DRY-RUN: $Message"
+    Write-Log -Prefix '[sync-github-meta]' "DRY-RUN: $Message"
 }
 
 function Get-SyncConfig {
@@ -266,7 +223,7 @@ function Sync-RoadmapIssue {
     }
 
     if (-not $Apply) {
-        Write-Log "DRY-RUN: pin roadmap issue '$title'"
+        Write-Log -Prefix '[sync-github-meta]' "DRY-RUN: pin roadmap issue '$title'"
         return
     }
 
@@ -281,21 +238,21 @@ function Sync-RoadmapIssue {
             '-f', 'query=mutation($issueId:ID!){pinIssue(input:{issueId:$issueId}){issue{id number}}}',
             '-f', "issueId=$([string]$issueToPin.id)"
         ) | Out-Null
-        Write-Log "Pinned roadmap issue '$title'"
+        Write-Log -Prefix '[sync-github-meta]' "Pinned roadmap issue '$title'"
     }
     catch {
-        Write-Log "Pin skipped for '$title': $($_.Exception.Message)"
+        Write-Log -Prefix '[sync-github-meta]' "Pin skipped for '$title': $($_.Exception.Message)"
     }
 }
 
 $config = Get-SyncConfig -Path $ConfigPath
-Write-Log "Using config '$ConfigPath'"
+Write-Log -Prefix '[sync-github-meta]' "Using config '$ConfigPath'"
 Invoke-GhReadyCheck
 Sync-Features -Config $config
 Sync-Labels -Config $config
 Sync-Milestones -Config $config
 Sync-RoadmapIssue -Config $config
-Write-Log "Completed in $mode mode."
+Write-Log -Prefix '[sync-github-meta]' "Completed in $mode mode."
 if (-not $Apply) {
-    Write-Log "Use -Apply to perform remote updates."
+    Write-Log -Prefix '[sync-github-meta]' "Use -Apply to perform remote updates."
 }
